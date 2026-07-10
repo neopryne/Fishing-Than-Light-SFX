@@ -1,6 +1,6 @@
-mods.fishing = {}
+
 log("FISHIGN WORK")
------------------------
+--#region--------------
 -- UTILITY FUNCTIONS --
 -----------------------
 
@@ -12,8 +12,8 @@ local function userdata_table(userdata, tableName)
 end
 
 local function get_random_point_in_radius(center, radius)
-    r = radius * math.sqrt(math.random())
-    theta = math.random() * 2 * math.pi
+    local r = radius * math.sqrt(math.random())
+    local theta = math.random() * 2 * math.pi
     return Hyperspace.Pointf(center.x + r * math.cos(theta), center.y + r * math.sin(theta))
 end
 
@@ -43,7 +43,7 @@ end
 
 -- Returns a table of all crew belonging to the given ship on the room tile at the given point
 local function get_ship_crew_point(shipManager, x, y, maxCount)
-    res = {}
+    local res = {}
     x = x//35
     y = y//35
     for crewmem in vter(shipManager.vCrewList) do
@@ -121,10 +121,48 @@ local RandomList = {
         return self[index]
     end,
 }
+--#endregion
+local fishListener = mods.fishing.fishListener
+
+--#region--------------------------VFX API-----------------------------------
+--The idea of this is to abstract my terrible, terrible tendrils from having to go all inside this file to mostly living somewhere else.
+
+
+mods.fishing.events = {
+    catch = "catch", --1 parameter, the scrap cost of the fish caught.
+    begin = "begin", --1 parameter, the scrap cost of the fish caught.
+    too_low = "too_low",
+    too_high = "too_high",
+    zone_lodge = "zone_lodge", --a fishing lodge exists
+    line_status = "line_status", --1 argument, the remaining line strength.  Makes it beep if you get low.
+    lure_equip = "lure_equip",
+    special_lure_get = "special_lure_get"
+}
+
+
+mods.fishing.vfx_broadcaster = {}
+local fishingEvents = mods.fishing.vfx_broadcaster
+fishingEvents.listeners = {}
+
+fishingEvents.registerListener = function (fishingListener)
+    fishingEvents.listeners.insert(fishingListener)
+end
+
+---comment
+---@param eventName string the event name, from mods.fishing.events
+---@param arguments table of other arguments, defined on a by-event basis
+local function triggerFishingEvent(eventName, arguments)
+    for listener in fishingEvents.listeners do
+        listener.onEvent(eventName, arguments)
+    end
+end
+--#endregion vfx api
 
 -------------the good stuff
 
-fishSounds = RandomList:New {"fishsplash1", "fishsplash2", "fishsplash3", "fishsplash4", "fishsplash5", "fishsplash6", "fishsplash7"}
+--#region definitions
+
+local fishSounds = RandomList:New {"fishsplash1", "fishsplash2", "fishsplash3", "fishsplash4", "fishsplash5", "fishsplash6", "fishsplash7"}
 
 mods.fishing.rods = {}
 local rods = mods.fishing.rods
@@ -222,6 +260,7 @@ flagShipBlueprints["BOSS_3_NORMAL_DLC"] = true
 flagShipBlueprints["BOSS_1_HARD_DLC"] = true
 flagShipBlueprints["BOSS_2_HARD_DLC"] = true
 flagShipBlueprints["BOSS_3_HARD_DLC"] = true
+--#endregion definitions
 
 local fishBeingCaught = false
 
@@ -375,6 +414,7 @@ script.on_internal_event(Defines.InternalEvents.PROJECTILE_FIRE, function(projec
 end)
 
 local function fish_start_event()
+    print("fish start event")
     local shipManager = Hyperspace.ships.player
     local maxRodStrength = 5
     shipBlueprint = nil
@@ -440,6 +480,7 @@ local function fish_start_event()
     else
         fishNumber2 = 0
     end
+    fishListener.onStartFishing({fishNumber, fishNumber2})
 end
 
 script.on_game_event("FISHING_START_NOCOMBAT", false, fish_start_event)
@@ -460,7 +501,7 @@ script.on_internal_event(Defines.InternalEvents.ON_MOUSE_L_BUTTON_DOWN, function
     end
 end)
 
-
+--#region hotkeys
 --[[
 ////////////////////
 CUSTOM BUTTON HOTKEYS
@@ -512,6 +553,7 @@ script.on_internal_event(Defines.InternalEvents.ON_MOUSE_L_BUTTON_UP, function(x
         --print("CLICK")
     end
 end)
+--#endregion hotkeys
 
 script.on_internal_event(Defines.InternalEvents.JUMP_ARRIVE, function(shipManager)
     for weapon in vter(shipManager:GetWeaponList()) do
@@ -562,8 +604,6 @@ script.on_internal_event(Defines.InternalEvents.ON_TICK, function()
                 local maxRodStrength = math.max(maxRodStrength, fishingData)
             end
         end
-
-        local commandGui = Hyperspace.Global.GetInstance():GetCApp().gui
 
         for artillery in vter(Hyperspace.ships.player.artillerySystems) do 
             if artillery.projectileFactory.blueprint.name == "ARTILLERY_FISHING_ROD_1" or artillery.projectileFactory.blueprint.name == "ARTILLERY_FISHING_ROD_2" or artillery.projectileFactory.blueprint.name == "ARTILLERY_FISHING_ROD_3" then 
@@ -678,23 +718,27 @@ script.on_internal_event(Defines.InternalEvents.ON_TICK, function()
                         if flagShipBlueprints[shipBlueprint] then
                             Hyperspace.CustomAchievementTracker.instance:SetAchievement("FISHING_SHIP_ACH_3", false)
                         end
-                        if fishNumber == 16 then
+                        local fishNumberRound = math.ceil(fishNumber/5) --1-3, but you might just get junk so I can't save the number until I know it.
+                        if fishNumber == 16 then --limrix ok so you only know if it's ultra rare before hand.  fishNumber is 1-16. also they don't reset your last fish number
                             fishNumber = 0
                             Hyperspace.CustomEventsParser.GetInstance():LoadEvent(worldManager,"FISH_ULTRA_RARE",false,-1)
+                            fishListener.onCatch(1, fishNumberRound)
                         else
                             if shipManager:HasAugmentation("FISH_INAUG_BAIT") > 0 then
                                 maxRandom = 3
                             end
                             local randomJunk = math.random(1, maxRandom)
-                            local fishNumberRound = math.ceil(fishNumber/5)
+                            
                             if randomJunk > 1 and Hyperspace.playerVariables.jumps_since_fish <= 7 - fishNumberRound and shipManager:HasAugmentation("FISH_AUG_FISHINGONLY") == 0 and shipManager:HasAugmentation("FISH_AUG_FISH_BOON") == 0 then
                                 --print("JUNK1")
                                 Hyperspace.playerVariables.jumps_since_fish = Hyperspace.playerVariables.jumps_since_fish + 1
                                 Hyperspace.CustomEventsParser.GetInstance():LoadEvent(worldManager,"FISH_JUNK",false,-1)
+                                fishListener.onJunk(1)
                             else
                                 --print("FISH1")
                                 Hyperspace.playerVariables.jumps_since_fish = 0
                                 Hyperspace.CustomEventsParser.GetInstance():LoadEvent(worldManager,sectors[Hyperspace.playerVariables.fish_sector]..fishNumberRound,false,-1)
+                                fishListener.onCatch(1, fishNumberRound)
                             end
                             fishNumber = 0
                         end
@@ -714,6 +758,7 @@ script.on_internal_event(Defines.InternalEvents.ON_TICK, function()
                     end
                     if fishCatch == 0 then
                         fishNumber = 0
+                        fishListener.onFishFumbled(1)
                         if fishNumber2 == 0 then
                             if Hyperspace.playerVariables.fish_arty_this_jump >= 4 then
                                 Hyperspace.CustomAchievementTracker.instance:SetAchievement("FISHARTY_SHIP_ACH_1", false)
@@ -792,7 +837,9 @@ script.on_internal_event(Defines.InternalEvents.ON_TICK, function()
                         if flagShipBlueprints[shipBlueprint] then
                             Hyperspace.CustomAchievementTracker.instance:SetAchievement("FISHING_SHIP_ACH_3", false)
                         end
+                        local fishNumberRound2 = math.ceil(fishNumber2/5)
                         if fishNumber2 == 16 then
+                            fishListener.onCatch(2, fishNumberRound2)
                             fishNumber2 = 0
                             Hyperspace.CustomEventsParser.GetInstance():LoadEvent(worldManager,"FISH_ULTRA_RARE",false,-1)
                         else
@@ -800,13 +847,14 @@ script.on_internal_event(Defines.InternalEvents.ON_TICK, function()
                                 maxRandom = 3
                             end
                             local randomJunk = math.random(1, maxRandom)
-                            local fishNumberRound2 = math.ceil(fishNumber2/5)
                             if randomJunk > 1 and Hyperspace.playerVariables.jumps_since_fish <= 7 - fishNumberRound2 and shipManager:HasAugmentation("FISH_AUG_FISHINGONLY") == 0 and shipManager:HasAugmentation("FISH_AUG_FISH_BOON") == 0 then
                                 --print("JUNK2")
                                 Hyperspace.playerVariables.jumps_since_fish = Hyperspace.playerVariables.jumps_since_fish + 1
                                 Hyperspace.CustomEventsParser.GetInstance():LoadEvent(worldManager,"FISH_JUNK",false,-1)
+                                fishListener.onJunk(2)
                             else
                                 --print("FISH2")
+                                fishListener.onCatch(2, fishNumberRound2)
                                 Hyperspace.playerVariables.jumps_since_fish = 0
                                 Hyperspace.CustomEventsParser.GetInstance():LoadEvent(worldManager,sectors[Hyperspace.playerVariables.fish_sector]..fishNumberRound2,false,-1)
                             end
@@ -828,6 +876,7 @@ script.on_internal_event(Defines.InternalEvents.ON_TICK, function()
                     end
                     if fishCatch2 == 0 then
                         fishNumber2 = 0
+                        fishListener.onFishFumbled(2)
                         if fishNumber == 0 then
                             if Hyperspace.playerVariables.fish_arty_this_jump >= 4 then
                                 Hyperspace.CustomAchievementTracker.instance:SetAchievement("FISHARTY_SHIP_ACH_1", false)
@@ -879,6 +928,8 @@ script.on_internal_event(Defines.InternalEvents.ON_TICK, function()
         end
     end
 end)
+
+--#region other stuff
 
 local fish_back_image = Hyperspace.Resources:CreateImagePrimitiveString(
     "statusUI/fish_back.png",
@@ -1636,3 +1687,5 @@ script.on_internal_event(Defines.InternalEvents.SHIP_LOOP, function(shipManager)
         -- fire more end --
     end
 end)
+
+--#endregion
