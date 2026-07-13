@@ -20,6 +20,32 @@
 			<loadEvent>STORAGE_CHECK_JUKEBOX</loadEvent>
 		</event>
 	</mod-append:choice>
+	
+	<mod-append:choice hidden="true" blue="true">
+		<text>Bass Fishing: Lodge Area</text>
+		<event>
+			<playMusic>lodge_area</playMusic>
+			<loadEvent>STORAGE_CHECK_JUKEBOX</loadEvent>
+		</event>
+	</mod-append:choice>
+</mod:findName>
+	
+	<mod-append:choice hidden="true" blue="true">
+		<text>Bass Fishing: Inlet Area</text>
+		<event>
+			<playMusic>inlet_area</playMusic>
+			<loadEvent>STORAGE_CHECK_JUKEBOX</loadEvent>
+		</event>
+	</mod-append:choice>
+</mod:findName>
+	
+	<mod-append:choice hidden="true" blue="true">
+		<text>Bass Fishing: Bridge Area</text>
+		<event>
+			<playMusic>bridge_area</playMusic>
+			<loadEvent>STORAGE_CHECK_JUKEBOX</loadEvent>
+		</event>
+	</mod-append:choice>
 </mod:findName>
 
 <event name="FISH_END_MUSIC">

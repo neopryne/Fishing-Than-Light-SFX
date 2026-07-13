@@ -33,6 +33,30 @@
   </mod-append:choice>
 </mod:findName>
 
+<eventList name="BASS_FISHING_MUSIC_RANDOM">
+  <event>
+		<playMusic>lodge_area</playMusic>
+	</event>
+  <event>
+		<playMusic>inlet_area</playMusic>
+	</event>
+  <event>
+		<playMusic>cave_area</playMusic>
+	</event>
+  <event>
+		<playMusic>cape_area</playMusic>
+	</event>
+  <event>
+		<playMusic>palace_area</playMusic>
+	</event>
+  <event>
+		<playMusic>falls_area</playMusic>
+	</event>
+  <event>
+		<playMusic>bridge_area</playMusic>
+	</event>
+</eventList>
+
 <event name="STORAGE_CHECK_FISHING_LOAD">
   <loadEvent>STORAGE_CHECK_FISHING</loadEvent>
 </event>
@@ -68,55 +92,55 @@
   <choice req="fish_start">
     <text>Go fishing out of combat.</text>
     <event name="FISHING_START_NOCOMBAT">
-			<playMusic>fishmusic</playMusic>
       <item_modify>
         <item type="scrap" min="-10" max="-10" />
       </item_modify>
+      <loadEvent>BASS_FISHING_MUSIC_RANDOM</loadEvent>
     </event>
   </choice>
   <choice req="fish_start_2">
     <text>Go fishing out of combat again.</text>
     <event name="FISHING_START_NOCOMBAT2">
-			<playMusic>fishmusic</playMusic>
       <item_modify>
         <item type="scrap" min="-20" max="-20" />
       </item_modify>
+      <loadEvent>BASS_FISHING_MUSIC_RANDOM</loadEvent>
     </event>
   </choice>
   <choice req="fish_start_3">
     <text>Go fishing out of combat again.</text>
     <event name="FISHING_START_NOCOMBAT3">
-			<playMusic>fishmusic</playMusic>
       <item_modify>
         <item type="scrap" min="-40" max="-40" />
       </item_modify>
+      <loadEvent>BASS_FISHING_MUSIC_RANDOM</loadEvent>
     </event>
   </choice>
   <choice req="fish_start_4">
     <text>Go fishing out of combat again.</text>
     <event name="FISHING_START_NOCOMBAT4">
-			<playMusic>fishmusic</playMusic>
       <item_modify>
         <item type="scrap" min="-70" max="-70" />
       </item_modify>
+      <loadEvent>BASS_FISHING_MUSIC_RANDOM</loadEvent>
     </event>
   </choice>
   <choice req="fish_start_5">
     <text>Go fishing out of combat again.</text>
     <event name="FISHING_START_NOCOMBAT5">
-			<playMusic>fishmusic</playMusic>
       <item_modify>
         <item type="scrap" min="-100" max="-100" />
       </item_modify>
+      <loadEvent>BASS_FISHING_MUSIC_RANDOM</loadEvent>
     </event>
   </choice>
   <choice req="fish_start_6">
     <text>Go fishing out of combat again.</text>
     <event name="FISHING_START_NOCOMBAT6">
-			<playMusic>fishmusic</playMusic>
       <item_modify>
         <item type="scrap" min="-140" max="-140" />
       </item_modify>
+      <loadEvent>BASS_FISHING_MUSIC_RANDOM</loadEvent>
     </event>
   </choice>
   <choice req="BLUELIST_FISHING_RODS_UP" blue="false">

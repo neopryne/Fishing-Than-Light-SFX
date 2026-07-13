@@ -659,8 +659,11 @@ script.on_internal_event(Defines.InternalEvents.ON_TICK, function()
 
 
             if fishNumber > 0 then
+                local beepingLevel = math.ceil(math.max(0, (-(((fishCatch / fishMax) - .4) * 10))))
+                --print("beeping", beepingLevel)
+                fishListener.beepingLevel(1, beepingLevel)
 
-                if fishSpeed > 0 then 
+                if fishSpeed > 0 then
                     fishSpeed = fishSpeed - (gravity) *  Hyperspace.FPS.SpeedFactor/16
                 elseif fishSpeed < 0 then
                     fishSpeed = fishSpeed + (gravity) *  Hyperspace.FPS.SpeedFactor/16
@@ -670,6 +673,7 @@ script.on_internal_event(Defines.InternalEvents.ON_TICK, function()
                 if fishTimer == 0 then
                     local soundName = fishSounds:GetItem()
                     Hyperspace.Sounds:PlaySoundMix(soundName, -1, false)
+                    fishListener.fishDarts()
                     fishTimer = 1 - (fishNumber/17) + (2*math.random())
                     local negative = math.random()
                     local random = ((math.random() + 3) * (fishNumber * 2 + 20))
@@ -783,14 +787,19 @@ script.on_internal_event(Defines.InternalEvents.ON_TICK, function()
                     fishSpeed2 = fishSpeed2 + (gravity) *  Hyperspace.FPS.SpeedFactor/16
                 end
 
+                local beepingLevel = math.ceil(math.max(0, (-(((fishCatch2 / fishMax) - .4) * 10))))
+                --print("beeping2", beepingLevel)--todo remove
+                fishListener.beepingLevel(2, beepingLevel)
+
                 fishTimer2 = math.max(fishTimer2 - Hyperspace.FPS.SpeedFactor/16, 0)
                 if fishTimer2 == 0 then
+                    fishListener.fishDarts()
                     local soundName = fishSounds:GetItem()
                     Hyperspace.Sounds:PlaySoundMix(soundName, -1, false)
                     fishTimer2 = 1 - (fishNumber2/17) + (2*math.random())
                     local negative = math.random()
                     local random = ((math.random() + 3) * (fishNumber * 2 + 20))
-                    if negative >= 0.5 then 
+                    if negative >= 0.5 then
                         random = -1 * random
                     end
                     fishSpeed2 = fishSpeed2 / 2

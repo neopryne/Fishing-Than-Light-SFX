@@ -269,8 +269,35 @@
     </track>
     <track>
         <name>lodge_area</name>
-        <explore>bass_fishing/lz_MUS_AreaLodgeEXPLORE.ogg</explore>
-        <combat>bass_fishing/lz_MUS_AreaLodgeBATTLE.ogg</combat>
+        <explore>bass_fishing/AreaLodge.ogg</explore>
+        <combat>bass_fishing/AreaLodgeRemix.ogg</combat>
+    </track>
+    <track>
+        <name>inlet_area</name>
+        <explore>bass_fishing/AreaInletRemix.ogg</explore>
+        <combat>bass_fishing/AreaInlet.ogg</combat>
+    </track>
+    <track>
+        <name>cave_area</name>
+        <explore>bass_fishing/AreaCave.ogg</explore>
+    </track>
+    <track>
+        <name>cape_area</name>
+        <explore>bass_fishing/AreaCape.ogg</explore>
+        <combat>bass_fishing/AreaCapeRemix.ogg</combat>
+    </track>
+    <track>
+        <name>palace_area</name>
+        <explore>bass_fishing/AreaPalace.ogg</explore>
+        <combat>bass_fishing/AreaPalaceRemix.ogg</combat>
+    </track>
+    <track>
+        <name>falls_area</name>
+        <explore>bass_fishing/AreaFalls.ogg</explore>
+    </track>
+    <track>
+        <name>bridge_area</name>
+        <explore>bass_fishing/AreaBridge.ogg</explore>
     </track>
     <track>
         <name>title</name>
