@@ -57,6 +57,22 @@
 	</event>
 </eventList>
 
+<event name="BASS_FISHING_FIGHT_MUSIC_1">
+		<playMusic>contest_of_skill</playMusic>
+</event>
+
+<event name="BASS_FISHING_FIGHT_MUSIC_2">
+		<playMusic>big_contest_of_skill</playMusic>
+</event>
+
+<event name="BASS_FISHING_FIGHT_MUSIC_3">
+		<playMusic>huge_contest_of_skill</playMusic>
+</event>
+
+<event name="BASS_FISHING_FIGHT_MUSIC_4">
+		<playMusic>legendary_contest_of_skill</playMusic>
+</event>
+
 <event name="STORAGE_CHECK_FISHING_LOAD">
   <loadEvent>STORAGE_CHECK_FISHING</loadEvent>
 </event>

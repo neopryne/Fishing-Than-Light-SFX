@@ -105,7 +105,13 @@ SoundManager.clobberChannel = function(channelNumber)
     end
 end
 
---optional channel, if none, make new one.  If exists, clobber queue and play this. todo combine with queue.
+---Add a sound to a channel's queue.
+---@param channelId number Optional param for channel to use, if missing will create a new channel.
+---@param soundName string previously registered with soundManager.registerSound()
+---@param volume number passed to Hyperspace.Sounds:PlaySoundMix
+---@param looping boolean if true, sound will loop until channel is cleared.
+---@param duration number how long to wait until this channel can play another sound
+---@return number channel of the sound.  Not the one hyperspace uses.
 SoundManager.playSound = function(channelId, soundName, volume, looping, duration)
     SoundManager.clobberChannel(channelId)
     return SoundManager.queueSound(channelId, soundName, volume, looping, duration)

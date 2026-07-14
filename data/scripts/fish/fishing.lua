@@ -124,40 +124,6 @@ local RandomList = {
 --#endregion
 local fishListener = mods.fishing.fishListener
 
---#region--------------------------VFX API-----------------------------------
---The idea of this is to abstract my terrible, terrible tendrils from having to go all inside this file to mostly living somewhere else.
-
-
-mods.fishing.events = {
-    catch = "catch", --1 parameter, the scrap cost of the fish caught.
-    begin = "begin", --1 parameter, the scrap cost of the fish caught.
-    too_low = "too_low",
-    too_high = "too_high",
-    zone_lodge = "zone_lodge", --a fishing lodge exists
-    line_status = "line_status", --1 argument, the remaining line strength.  Makes it beep if you get low.
-    lure_equip = "lure_equip",
-    special_lure_get = "special_lure_get"
-}
-
-
-mods.fishing.vfx_broadcaster = {}
-local fishingEvents = mods.fishing.vfx_broadcaster
-fishingEvents.listeners = {}
-
-fishingEvents.registerListener = function (fishingListener)
-    fishingEvents.listeners.insert(fishingListener)
-end
-
----comment
----@param eventName string the event name, from mods.fishing.events
----@param arguments table of other arguments, defined on a by-event basis
-local function triggerFishingEvent(eventName, arguments)
-    for listener in fishingEvents.listeners do
-        listener.onEvent(eventName, arguments)
-    end
-end
---#endregion vfx api
-
 -------------the good stuff
 
 --#region definitions
@@ -317,6 +283,7 @@ script.on_internal_event(Defines.InternalEvents.PROJECTILE_INITIALIZE, function(
         else
             fishNumber2 = 0
         end
+        fishListener.onStartFishing({fishNumber, fishNumber2})
         projectile:Kill()
     end
 end)
@@ -368,6 +335,7 @@ script.on_internal_event(Defines.InternalEvents.PROJECTILE_FIRE, function(projec
             fishNumber2 = 0
         end
         Hyperspace.playerVariables.fish_arty_this_jump = Hyperspace.playerVariables.fish_arty_this_jump + 1
+        fishListener.onStartFishing({fishNumber, fishNumber2})
     end
 end)
 
@@ -410,6 +378,7 @@ script.on_internal_event(Defines.InternalEvents.PROJECTILE_FIRE, function(projec
         fishPos2 = 150
         fishTimer2 = 1
         Hyperspace.playerVariables.fish_arty_this_jump = Hyperspace.playerVariables.fish_arty_this_jump + 1
+        fishListener.onStartFishing({fishNumber, fishNumber2})
     end
 end)
 
@@ -722,7 +691,7 @@ script.on_internal_event(Defines.InternalEvents.ON_TICK, function()
                             Hyperspace.CustomAchievementTracker.instance:SetAchievement("FISHING_SHIP_ACH_3", false)
                         end
                         local fishNumberRound = math.ceil(fishNumber/5) --1-3, but you might just get junk so I can't save the number until I know it.
-                        if fishNumber == 16 then --limrix ok so you only know if it's ultra rare before hand.  fishNumber is 1-16. also they don't reset your last fish number
+                        if fishNumber == 16 then
                             fishNumber = 0
                             Hyperspace.CustomEventsParser.GetInstance():LoadEvent(worldManager,"FISH_ULTRA_RARE",false,-1)
                             fishListener.onCatch(1, fishNumberRound)
@@ -747,6 +716,7 @@ script.on_internal_event(Defines.InternalEvents.ON_TICK, function()
                         end
                     end
                 else
+                    fishListener.outOfBounds(selectPos - fishPos)
                     fishBeingCaught = false
                     local scalerLoss = 1
                     if shipManager:HasAugmentation("FISH_INAUG_SPEED") > 0 then

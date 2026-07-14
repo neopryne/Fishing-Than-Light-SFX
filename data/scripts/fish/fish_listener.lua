@@ -50,7 +50,6 @@ local TIMERS = {banter=UNSET, almostThere=UNSET, lineBreak=UNSET, pullDown=UNSET
 
 local JUNK_CATCH_SOUNDS = {"BASS_no_fish", "BASS_aough", "BASS_noooooo", "BASS_sigh",
         "BASS_small_one", "BASS_mmh_small_one", "BASS_hey_good_fighting_for_a_small_one", "BASS_release_size"}
---local SMALL_CATCH_SOUNDS = {"BASS_small_one", "BASS_mmh_small_one", "BASS_hey_good_fighting_for_a_small_one"}
 local AVERAGE_CATCH_SOUNDS = {"BASS_ok_an_average_size", "BASS_an_average_size", "BASS_average_size_yeah",
          "BASS_medium", "BASS_this_ones_an_average_size", "BASS_oh_fish", "BASS_get_bass"}
 local BIG_CATCH_SOUNDS = {"BASS_oh_a_big_one", "BASS_super_big", "BASS_wow_what_a_pull", "BASS_big_one", "BASS_keeper_size"}
@@ -68,7 +67,7 @@ local FISH_BANTER = {"BASS_loosen_it", "BASS_good_casting", "BASS_good_fighting"
         "BASS_no_no__no", "BASS_no_time_to_lose", "BASS_now", "BASS_come_on", "BASS_dont_let_this_one_go",
         "BASS_faster_faster", "BASS_ohouahou", "BASS_reel_in_reel_in", "BASS_wind_it_wind_it",
         "BASS_gack", "BASS_bite_it", "BASS_hook_it", "BASS_its_coming_near", "BASS_dont_let_this_one_go",
-        "BASS_keep_it_tight", "BASS_wind_it", "BASS_roll_it_its_on_the_bait", "BASS_yeah_hes_a_fighter"}
+        "BASS_keep_it_tight", "BASS_wind_it", "BASS_roll_it_its_on_the_bait", "BASS_yeah_hes_a_fighter", "BASS_slow_it_down"}
 local FISH_WEAK = {"BASS_hes_getting_weak", "BASS_youre_almost_there"}
 local LINE_WEAK = {"BASS_the_lines_gonna_break"}
 local FISH_SPLASHES = {"BASS_splash_1", "BASS_splash_2", "BASS_splash_3"}
@@ -122,6 +121,7 @@ end
 ---comment
 ---@param fishNumbers table pair of numbers We only care if this is 16 = legendary fish.
 fishListener.onStartFishing = function(fishNumbers)
+    local bigFish = fishNumbers[1] --math.max(fishNumbers[1], fishNumbers[2]) --always fish 1.
     local finishedFishing = true
     for _,fishNumber in ipairs(mCurrentFishNumbers) do
         if fishNumber ~= NO_FISH then
@@ -133,16 +133,20 @@ fishListener.onStartFishing = function(fishNumbers)
     end
     mIsFishing = true
     mCurrentFishNumbers = fishNumbers
-    for _,fish in ipairs(fishNumbers) do
-        if fish == 16 then
-            mLegendHooked = true
-        end
+    if bigFish == 16 then
+        mLegendHooked = true
     end
-    if legendHooked then
+    if mLegendHooked then
         playRandomSound(LEGEND_BEGIN, 4, false)
     else
         playRandomSound(FISH_BEGIN, 4, false)
     end
+
+    --I have no idea why this works, but this only activates while in combat, which is exactly what I wanted, but idk why it does that.
+    local worldManager = Hyperspace.Global.GetInstance():GetCApp().world
+    local eventName = "BASS_FISHING_FIGHT_MUSIC_"..tostring(math.ceil(bigFish/5))
+    --print("Loading event", eventName, bigFish)
+    Hyperspace.CustomEventsParser.GetInstance():LoadEvent(worldManager, eventName, false, -1)
 end
 
 local function endFishing()
@@ -170,7 +174,7 @@ local function endFish(index)
     end
 end
 
-
+--bass sound test
 bst = {junk=40 * TIME_SCALE_FACTOR, average=135 * TIME_SCALE_FACTOR, big=260 * TIME_SCALE_FACTOR,
  huge=310 * TIME_SCALE_FACTOR, legend=10 * TIME_SCALE_FACTOR}
 function bassTS0()
@@ -239,16 +243,56 @@ script.on_internal_event(Defines.InternalEvents.ON_TICK, function()
     end
     --play banter
     if TIMERS.banter == 0 then
-        if mLegendHooked then
-            playRandomSound(BLUE_FISH, 6, false)
-            mLegendHooked = false
-        else
-            playRandomSound(FISH_BANTER, 6, false)
-        end
+        playRandomSound(FISH_BANTER, 6, false)
         TIMERS.banter = math.max(1.612, math.random() * 4.1)
     end
 end)
 
+bst.swag = .44
+local function rodDownRandomSound()
+    local x = math.random(1,3)
+    if x == 1 then
+        Hyperspace.Sounds:PlaySoundMix("BASS_lower_the_rod", 4, false)
+    elseif x == 2 then
+        SoundManager.playSound(2, "BASS_turn_the_rod", 4, false, bst.swag)
+        SoundManager.queueSound(2, "BASS_right", 4, false, 0)
+    elseif x == 3 then
+        SoundManager.playSound(2, "BASS_turn_the_rod", 4, false, bst.swag)
+        SoundManager.queueSound(2, "BASS_down", 4, false, 0)
+    end
+end
+
+local function rodUpRandomSound()
+    local x = math.random(1,3)
+    if x == 1 then
+        Hyperspace.Sounds:PlaySoundMix("BASS_pull_up_the_rod", 4, false)
+    elseif x == 2 then
+        SoundManager.playSound(2, "BASS_turn_the_rod", 4, false, bst.swag)
+        SoundManager.queueSound(2, "BASS_left", 4, false, 0)
+    elseif x == 3 then
+        SoundManager.playSound(2, "BASS_turn_the_rod", 4, false, bst.swag)
+        SoundManager.queueSound(2, "BASS_up", 4, false, 0)
+    end
+end
+
+local mLastCalledDirection = nil
+fishListener.outOfBounds = function(rodDifferential)
+    if math.abs(rodDifferential) > 170 then
+        if rodDifferential > 0 then
+            if mLastCalledDirection ~= -1 then
+                rodDownRandomSound()
+                mLastCalledDirection = -1
+            end
+        else
+            if mLastCalledDirection ~= 1 then
+                rodUpRandomSound()
+                mLastCalledDirection = 1
+            end
+        end
+    else
+        mLastCalledDirection = nil --not sure this happens
+    end
+end
 
 fishListener.resetBeeping = function(index)
     fishListener.beepingLevel(index, 0)
@@ -310,7 +354,6 @@ script.on_internal_event(Defines.InternalEvents.PRE_CREATE_CHOICEBOX, function(l
             end
         end
 
-        --TODO I'm trying some very event based things for this now.
         if locationEvent.eventName == "FISH_JUNK_REAL" then
             bassTS0()
         elseif locationEvent.eventName == "FISH_RANDOM_1" or
@@ -385,7 +428,7 @@ script.on_internal_event(Defines.InternalEvents.PRE_CREATE_CHOICEBOX, function(l
 
 
 --Fish graphic
-local fishGraphic = Hyperspace.Resources:CreateImagePrimitiveString("bass_fishing/bass_2lgJrhh_tailed_scaled.png", 0, 0,
+local fishGraphic = Hyperspace.Resources:CreateImagePrimitiveString("bass_fishing/bass_2lgJrhh_tailed_scaled_2.png", 0, 0,
             0, Graphics.GL_Color(1, 1, 1, 1), 1.0, false)
 script.on_render_event(Defines.RenderEvents.MAIN_MENU, function() end, function()
     local menu = Hyperspace.App.menu
@@ -393,7 +436,7 @@ script.on_render_event(Defines.RenderEvents.MAIN_MENU, function() end, function(
     -- local mousePos = Hyperspace.Mouse.position
     -- print(mousePos.x, mousePos.y)
     Graphics.CSurface.GL_PushMatrix()
-    Graphics.CSurface.GL_Translate(646, -73, 0)
+    Graphics.CSurface.GL_Translate(961, 53, 0)
     Graphics.CSurface.GL_RenderPrimitive(fishGraphic)
     Graphics.CSurface.GL_PopMatrix()
 end)
