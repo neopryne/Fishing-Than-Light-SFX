@@ -12,16 +12,12 @@ Cape area for the eventual parahumans crossover
 --When it damages a ship: say hit! hit bonus!
 --when a ship flees: it's gone
 
-The palace for slug and crystal places.
-
-
 Jump menu opened: go to next area
     check beaconmapplus
 
 todo replace all the music or just during fishing?
 Definitely fade out whatever battle music during fishing and play fish music
 Fish cruiser should play fish music always.
-make a list of all the music tracks to select from
 
 Tourniment series is difficulty select
 make fishing pick from a list of fishing music
@@ -32,17 +28,20 @@ If I really want to use the beginning theme, I need an animatic for it you can c
 need to replace bp_mus_victory
 
 --todo why are the voice lines so quiet, and don't seem to go louder with volume?
-todo add the other sounds to the jukebox.
+scaling chance to play the corresponding fight music for a given fish when we start fishing.
 ]]
 
 local time_increment = mods.multiverse.time_increment
 local fishListener = mods.fishing.fishListener
 local SoundManager = mods.sounds.manager
 
-local WARNING_LENGTHS = {22, 18, 14, 12}
+local TIME_SCALE_FACTOR = 0.016687400639057 --Used to convert measurements from my computer in frames to time_increment.
+--Further additions should not use this.
+local WARNING_LENGTHS = {22 * TIME_SCALE_FACTOR, 18 * TIME_SCALE_FACTOR, 14 * TIME_SCALE_FACTOR, 12 * TIME_SCALE_FACTOR}
 -- for name,length in pairs(WARNING_LENGTHS) do
 --     SoundManager.registerSound(name, length)
 -- end
+
 
 local NO_FISH = 0
 local STARTING_BEEP_LEVEL = 3
@@ -50,25 +49,26 @@ local UNSET = -1
 local TIMERS = {banter=UNSET, almostThere=UNSET, lineBreak=UNSET, pullDown=UNSET, pullUp=UNSET}
 
 local JUNK_CATCH_SOUNDS = {"BASS_no_fish", "BASS_aough", "BASS_noooooo", "BASS_sigh",
-        "BASS_small_one", "BASS_mmh_small_one", "BASS_hey_good_fighting_for_a_small_one"}
+        "BASS_small_one", "BASS_mmh_small_one", "BASS_hey_good_fighting_for_a_small_one", "BASS_release_size"}
 --local SMALL_CATCH_SOUNDS = {"BASS_small_one", "BASS_mmh_small_one", "BASS_hey_good_fighting_for_a_small_one"}
 local AVERAGE_CATCH_SOUNDS = {"BASS_ok_an_average_size", "BASS_an_average_size", "BASS_average_size_yeah",
          "BASS_medium", "BASS_this_ones_an_average_size", "BASS_oh_fish", "BASS_get_bass"}
-local BIG_CATCH_SOUNDS = {"BASS_oh_a_big_one", "BASS_super_big", "BASS_wow_what_a_pull", "BASS_big_one"}
+local BIG_CATCH_SOUNDS = {"BASS_oh_a_big_one", "BASS_super_big", "BASS_wow_what_a_pull", "BASS_big_one", "BASS_keeper_size"}
 local HUGE_CATCH_SOUNDS = {"BASS_this_ones_huge"}
 local LEGEND_CATCH_SOUNDS = {"BASS_this_ones_enourmous_this_is_really_something"}
 local LOST_IT_SOUNDS = {"BASS_aough", "BASS_miss", "BASS_lost", "BASS_damnit",
         "BASS_noooo_missed", "BASS_the_hook_came_off", "BASS_oh_the_line_broke", "BASS_ohh_it_was_so_close",
-        "BASS_noooooo", "BASS_no_fish", "BASS_its_gone", "BASS_line_break"}
+        "BASS_noooooo", "BASS_no_fish", "BASS_its_gone", "BASS_line_break", "BASS_oh_miss"}
 local BLUE_FISH = {"BASS_a_big_one_close_by", "BASS_its_gonna_be_a_big_one"}
-local FISH_BEGIN = {"BASS_fight", "BASS_start", "BASS_fish", "BASS_bite"}
+local FISH_BEGIN = {"BASS_fight", "BASS_start", "BASS_fish", "BASS_bite", "BASS_fish_2"}
 local LEGEND_BEGIN = {"BASS_its_gonna_be_a_big_one"}
 local FISH_BANTER = {"BASS_loosen_it", "BASS_good_casting", "BASS_good_fighting", "BASS_good_going_keep_with_it",
         "BASS_be_careful", "BASS_be_careful_when_you_go_for_it", "BASS_be_careful_with_the_tension", "BASS_good_job",
         "BASS_hang_in_there", "BASS_mmph", "BASS_no", "BASS_no__no_no",
         "BASS_no_no__no", "BASS_no_time_to_lose", "BASS_now", "BASS_come_on", "BASS_dont_let_this_one_go",
         "BASS_faster_faster", "BASS_ohouahou", "BASS_reel_in_reel_in", "BASS_wind_it_wind_it",
-        "BASS_gack", "BASS_bite_it", "BASS_hook_it", "BASS_its_coming_near", "BASS_dont_let_this_one_go"}
+        "BASS_gack", "BASS_bite_it", "BASS_hook_it", "BASS_its_coming_near", "BASS_dont_let_this_one_go",
+        "BASS_keep_it_tight", "BASS_wind_it", "BASS_roll_it_its_on_the_bait", "BASS_yeah_hes_a_fighter"}
 local FISH_WEAK = {"BASS_hes_getting_weak", "BASS_youre_almost_there"}
 local LINE_WEAK = {"BASS_the_lines_gonna_break"}
 local FISH_SPLASHES = {"BASS_splash_1", "BASS_splash_2", "BASS_splash_3"}
@@ -90,21 +90,19 @@ local mCurrentFishNumbers = {NO_FISH, NO_FISH}
 local mIsFishing = false
 local mLegendHooked = false --meaningful banter 
 
-
 local mSecondSound
 --When game loads:
 local loadSoundsType = math.random(1,1)
 script.on_init(function(newGame)
-    print("on_init", newGame)
     mSecondSound = true
 end)
 
-Hyperspace.Sounds:PlaySoundMix(GAME_START[loadSoundsType], 16, false)
+Hyperspace.Sounds:PlaySoundMix(GAME_START[loadSoundsType], 30, false)
 --We only need this for second sound, both still have the volume issue.
 script.on_internal_event(Defines.InternalEvents.ON_TICK, function()
     if mSecondSound then
         mSecondSound = false
-        Hyperspace.Sounds:PlaySoundMix(GAME_START_2[loadSoundsType], 16, false)
+        Hyperspace.Sounds:PlaySoundMix(GAME_START_2[loadSoundsType], 30, false)
     end
 end)
 
@@ -172,17 +170,9 @@ local function endFish(index)
     end
 end
 
----comment
-fishListener.onJunk = function(index)
-    if mCurrentFishNumbers == NO_FISH then
-        print("Error: onCatch called with no fish.")
-    end
-    playRandomSound(JUNK_CATCH_SOUNDS, 6, false)
-    Hyperspace.Sounds:PlaySoundMix("BASS_get_small", 4, false)
-    endFish(index)
-end
 
-bst = {junk=40, average=160, big=240, huge=300, legend=400}
+bst = {junk=40 * TIME_SCALE_FACTOR, average=135 * TIME_SCALE_FACTOR, big=260 * TIME_SCALE_FACTOR,
+ huge=310 * TIME_SCALE_FACTOR, legend=10 * TIME_SCALE_FACTOR}
 function bassTS0()
     SoundManager.playSound(2, "BASS_get_small", 4, false, bst.junk)
     SoundManager.queueSound(2, getRandomItem(JUNK_CATCH_SOUNDS), 6, false, 0)
@@ -209,23 +199,16 @@ function bassTS4()
 end
 
 ---comment
----@param size number
-fishListener.onCatch = function(index, size)
+fishListener.onJunk = function(index)
     if mCurrentFishNumbers == NO_FISH then
         print("Error: onCatch called with no fish.")
-    elseif size == 1 then
-        SoundManager.playSound(2, "BASS_get_average", 4, false, 30)
-        SoundManager.queueSound(2, getRandomItem(AVERAGE_CATCH_SOUNDS), 6, false, 0)
-    elseif size == 2 then
-        SoundManager.playSound(2, "BASS_get_big", 4, false, 160)
-        SoundManager.queueSound(2, getRandomItem(BIG_CATCH_SOUNDS), 6, false, 0)
-    elseif size == 3 then
-        SoundManager.playSound(2, "BASS_get_huge", 4, false, 200)
-        SoundManager.queueSound(2, getRandomItem(HUGE_CATCH_SOUNDS), 6, false, 0)
-    else
-        SoundManager.playSound(2, "BASS_get_legend", 4, false, 300)
-        SoundManager.queueSound(2, getRandomItem(LEGEND_CATCH_SOUNDS), 6, false, 0)
     end
+    endFish(index)
+end
+
+---comment
+---@param size number
+fishListener.onCatch = function(index, size)
     endFish(index)
 end
 
@@ -256,7 +239,12 @@ script.on_internal_event(Defines.InternalEvents.ON_TICK, function()
     end
     --play banter
     if TIMERS.banter == 0 then
-        playRandomSound(FISH_BANTER, 6, false)
+        if mLegendHooked then
+            playRandomSound(BLUE_FISH, 6, false)
+            mLegendHooked = false
+        else
+            playRandomSound(FISH_BANTER, 6, false)
+        end
         TIMERS.banter = math.max(1.612, math.random() * 4.1)
     end
 end)
@@ -270,7 +258,9 @@ end
 
 ---10/20/30/40% left.
 ---@param level number [0,4]. Zero is not beeping and 4 is frantic beeping.  I can do the timing by adding white space.
+--- actually this can be negative, that means you're catching it.
 fishListener.beepingLevel = function(index, level)
+
     local warning = mWarnings[index]
     local warningChannel = warning.channel
     if not warningChannel == UNSET then
@@ -289,16 +279,28 @@ fishListener.beepingLevel = function(index, level)
         end
     end
 
-    if level == 0 then
-        SoundManager.clobberChannel(1)
-    elseif level ~= warning.level then
-        local warningString = "BASS_warning_"..tostring(level)
-        print("Triggered beeping level", level, WARNING_LENGTHS[level])
-        warning.channel = SoundManager.playSound(1, warningString, 4, true, WARNING_LENGTHS[level])
-        -- Hyperspace.Sounds:PlaySoundMix(warning, 4, true)
+    if level ~= warning.level then
+        if level <= 0 then
+            SoundManager.clobberChannel(1)
+            if level == -3 then
+                --if math.random() > .83 then
+                    playRandomSound(FISH_WEAK, 4, false)
+                --end
+            end
+        end
+        if level > 0 then
+            local warningString = "BASS_warning_"..tostring(level)
+            -- print("Triggered beeping level", level, WARNING_LENGTHS[level])
+            warning.channel = SoundManager.playSound(1, warningString, 4, true, WARNING_LENGTHS[level])
+            -- Hyperspace.Sounds:PlaySoundMix(warning, 4, true)
+            if math.random() + (level / 20) > 1.07 then
+                playRandomSound(LINE_WEAK, 4, false)
+            end
+        end
     end
     warning.level = level
 end
+
 
 script.on_internal_event(Defines.InternalEvents.PRE_CREATE_CHOICEBOX, function(locationEvent)
         if locationEvent.stuff.augment then
@@ -307,10 +309,44 @@ script.on_internal_event(Defines.InternalEvents.PRE_CREATE_CHOICEBOX, function(l
                 Hyperspace.Sounds:PlaySoundMix("BASS_you_got_a_special_lure", 4, false)
             end
         end
-        --todo I could do the fish rewards like this, but then i'd have nothing to say about non-fish items gained.  eh, I guess i could fall back to what i do now.
-        --ok, todo do that.
-    
-        if locationEvent.eventName == "FISHING_STORE" then --Fishing lodge
+
+        --TODO I'm trying some very event based things for this now.
+        if locationEvent.eventName == "FISH_JUNK_REAL" then
+            bassTS0()
+        elseif locationEvent.eventName == "FISH_RANDOM_1" or
+        locationEvent.eventName == "FISH_HEKTAR_1_LOOT" or
+        locationEvent.eventName == "FISH_SCRAP_1" then
+            bassTS1()
+        elseif locationEvent.eventName == "FISH_RANDOM_2" or
+        locationEvent.eventName == "FISH_WEAPON_1" or
+        locationEvent.eventName == "FISH_HEKTAR_2_LOOT" or
+        locationEvent.eventName == "FISH_DRONE_1" or
+        locationEvent.eventName == "FISH_CREW_1" or
+        locationEvent.eventName == "FISH_SCRAP_2" then
+            bassTS2()
+        elseif locationEvent.eventName == "FISH_RANDOM_3" or
+        locationEvent.eventName == "FISH_FISHGUN" or
+        locationEvent.eventName == "FISH_SCRAP_3" then
+            bassTS3()
+        elseif locationEvent.eventName == "FISH_ULTRA_RARE" or
+        locationEvent.eventName == "FISH_FED_GIVE" or
+        locationEvent.eventName == "FISH_CIV_GIVE" or
+        locationEvent.eventName == "FISH_ENGI_GIVE" or
+        locationEvent.eventName == "FISH_ZOL_GIVE" or
+        locationEvent.eventName == "FISH_ORC_GIVE" or
+        locationEvent.eventName == "FISH_MAN_GIVE" or
+        locationEvent.eventName == "FISH_CRY_GIVE" or
+        locationEvent.eventName == "FISH_ROCK_GIVE" or
+        locationEvent.eventName == "FISH_REB_GIVE" or
+        locationEvent.eventName == "FISH_PIR_GIVE" or
+        locationEvent.eventName == "FISH_LAN_GIVE" or
+        locationEvent.eventName == "FISH_SLUG_GIVE" or
+        locationEvent.eventName == "FISH_LEECH_GIVE" or
+        --locationEvent.eventName == "FISH_HEKTAR_GIVE" or hektar is disabled for now
+        locationEvent.eventName == "FISH_ANCIENT_GIVE" or
+        locationEvent.eventName == "FISH_NEXUS_GIVE" then
+            bassTS4()
+        elseif locationEvent.eventName == "FISHING_STORE" then --Fishing lodge
             Hyperspace.Sounds:PlaySoundMix("BASS_lodge_area", 4, false)
         elseif locationEvent.eventName == "FISHING_STORE_KILLED" then --Maw quest
             Hyperspace.Sounds:PlaySoundMix("BASS_lodge_area_cleared", 4, false)
@@ -322,6 +358,13 @@ script.on_internal_event(Defines.InternalEvents.PRE_CREATE_CHOICEBOX, function(l
             locationEvent.eventName == "NEBULA_DISTRESS_SLUG_QUESTION" or
             locationEvent.eventName == "AEA_BIRD_ENGINEER" then
             Hyperspace.Sounds:PlaySoundMix("BASS_reed_area", 4, false)
+        elseif locationEvent.eventName == "ROCK_HOMEWORLDS" or --Palace tallies
+            locationEvent.eventName == "TYRDEO_PALACE" or
+            locationEvent.eventName == "HIVE" or
+            locationEvent.eventName == "KNIGHT_PALACE" or
+            locationEvent.eventName == "NEBULA_DYNASTY_DREADNAUGHT" or
+            locationEvent.eventName == "ROYAL_PALACE" then
+            Hyperspace.Sounds:PlaySoundMix("BASS_palace_area", 4, false)
         elseif locationEvent.eventName == "SHOWDOWN_CASUAL" or --Final Showdown
             locationEvent.eventName == "SHOWDOWN_NORMAL" or
             locationEvent.eventName == "SHOWDOWN_CHALLENGE" or
@@ -340,15 +383,17 @@ script.on_internal_event(Defines.InternalEvents.PRE_CREATE_CHOICEBOX, function(l
         end
     end)
 
+
 --Fish graphic
+local fishGraphic = Hyperspace.Resources:CreateImagePrimitiveString("bass_fishing/bass_2lgJrhh_tailed_scaled.png", 0, 0,
+            0, Graphics.GL_Color(1, 1, 1, 1), 1.0, false)
 script.on_render_event(Defines.RenderEvents.MAIN_MENU, function() end, function()
-    -- local menu = Hyperspace.App.menu
-    -- if menu.shipBuilder.bOpen then return end
-
-
-    -- Graphics.CSurface.GL_PushMatrix()
-    -- Graphics.CSurface.GL_SetColor(color)
-    -- Graphics.CSurface.GL_SetColorTint(color)
-    -- Graphics.freetype.easy_print(62, option.x, option.y, display)
-    -- Graphics.CSurface.GL_PopMatrix()
+    local menu = Hyperspace.App.menu
+    if menu.shipBuilder.bOpen then return end
+    -- local mousePos = Hyperspace.Mouse.position
+    -- print(mousePos.x, mousePos.y)
+    Graphics.CSurface.GL_PushMatrix()
+    Graphics.CSurface.GL_Translate(646, -73, 0)
+    Graphics.CSurface.GL_RenderPrimitive(fishGraphic)
+    Graphics.CSurface.GL_PopMatrix()
 end)

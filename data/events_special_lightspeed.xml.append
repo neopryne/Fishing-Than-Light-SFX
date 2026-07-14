@@ -29,14 +29,15 @@
   </choice>
 </event>
 
+<event name="FISH_JUNK_REAL">
+  <text>You reel in your catch to discover nothing more than some old junk.</text>
+  <weapon name="FISHLIST_JUNK" />
+</event>
 
 <event name="FISH_JUNK">
   <variable name="fish_caught" op="add" val="1"/>
   <loadEventList seeded="false" generate="false">
-    <event>
-      <text>You reel in your catch to discover nothing more than some old junk.</text>
-      <weapon name="FISHLIST_JUNK" />
-    </event>
+    <event load="FISH_JUNK_REAL"/>
     <event load="FISH_RANDOM_1" req="fish_reward_gfish" lvl="0" max_lvl="0"/>
   </loadEventList>
 </event>

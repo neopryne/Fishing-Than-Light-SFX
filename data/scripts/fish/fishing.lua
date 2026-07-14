@@ -414,7 +414,6 @@ script.on_internal_event(Defines.InternalEvents.PROJECTILE_FIRE, function(projec
 end)
 
 local function fish_start_event()
-    print("fish start event")
     local shipManager = Hyperspace.ships.player
     local maxRodStrength = 5
     shipBlueprint = nil
@@ -659,8 +658,8 @@ script.on_internal_event(Defines.InternalEvents.ON_TICK, function()
 
 
             if fishNumber > 0 then
-                local beepingLevel = math.ceil(math.max(0, (-(((fishCatch / fishMax) - .4) * 10))))
-                --print("beeping", beepingLevel)
+                local beepingLevel = math.ceil((-(((fishCatch / fishMax) - .4) * 10))) --allow it to be negative
+                -- print("beeping", beepingLevel)
                 fishListener.beepingLevel(1, beepingLevel)
 
                 if fishSpeed > 0 then
@@ -736,13 +735,13 @@ script.on_internal_event(Defines.InternalEvents.ON_TICK, function()
                             if randomJunk > 1 and Hyperspace.playerVariables.jumps_since_fish <= 7 - fishNumberRound and shipManager:HasAugmentation("FISH_AUG_FISHINGONLY") == 0 and shipManager:HasAugmentation("FISH_AUG_FISH_BOON") == 0 then
                                 --print("JUNK1")
                                 Hyperspace.playerVariables.jumps_since_fish = Hyperspace.playerVariables.jumps_since_fish + 1
-                                Hyperspace.CustomEventsParser.GetInstance():LoadEvent(worldManager,"FISH_JUNK",false,-1)
                                 fishListener.onJunk(1)
+                                Hyperspace.CustomEventsParser.GetInstance():LoadEvent(worldManager,"FISH_JUNK",false,-1)
                             else
                                 --print("FISH1")
                                 Hyperspace.playerVariables.jumps_since_fish = 0
-                                Hyperspace.CustomEventsParser.GetInstance():LoadEvent(worldManager,sectors[Hyperspace.playerVariables.fish_sector]..fishNumberRound,false,-1)
                                 fishListener.onCatch(1, fishNumberRound)
+                                Hyperspace.CustomEventsParser.GetInstance():LoadEvent(worldManager,sectors[Hyperspace.playerVariables.fish_sector]..fishNumberRound,false,-1)
                             end
                             fishNumber = 0
                         end
@@ -859,12 +858,12 @@ script.on_internal_event(Defines.InternalEvents.ON_TICK, function()
                             if randomJunk > 1 and Hyperspace.playerVariables.jumps_since_fish <= 7 - fishNumberRound2 and shipManager:HasAugmentation("FISH_AUG_FISHINGONLY") == 0 and shipManager:HasAugmentation("FISH_AUG_FISH_BOON") == 0 then
                                 --print("JUNK2")
                                 Hyperspace.playerVariables.jumps_since_fish = Hyperspace.playerVariables.jumps_since_fish + 1
-                                Hyperspace.CustomEventsParser.GetInstance():LoadEvent(worldManager,"FISH_JUNK",false,-1)
                                 fishListener.onJunk(2)
+                                Hyperspace.CustomEventsParser.GetInstance():LoadEvent(worldManager,"FISH_JUNK",false,-1)
                             else
                                 --print("FISH2")
-                                fishListener.onCatch(2, fishNumberRound2)
                                 Hyperspace.playerVariables.jumps_since_fish = 0
+                                fishListener.onCatch(2, fishNumberRound2)
                                 Hyperspace.CustomEventsParser.GetInstance():LoadEvent(worldManager,sectors[Hyperspace.playerVariables.fish_sector]..fishNumberRound2,false,-1)
                             end
                             fishNumber2 = 0

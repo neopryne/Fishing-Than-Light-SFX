@@ -1,6 +1,6 @@
 local SoundManager = mods.sounds.manager
 local Deque = mods.structs.deque
-
+local time_increment = mods.multiverse.time_increment
 --[[
 channel object
     id
@@ -38,9 +38,9 @@ local function clobberChannel(channelQueue)
 end
 
 local function playSoundInternal(soundObject, channelQueue)
-    print("playSoundInternal \n    channelQueue", channelQueue.playbackChannel,  channelQueue.currentSoundRemainingTime, channelQueue.id,
-            "\n    soundObject", soundObject.name, soundObject.volume, soundObject.loop, soundObject.duration)
-    stopChannel(channelQueue)
+    -- print("playSoundInternal \n    channelQueue", channelQueue.playbackChannel,  channelQueue.currentSoundRemainingTime, channelQueue.id,
+    --         "\n    soundObject", soundObject.name, soundObject.volume, soundObject.loop, soundObject.duration)
+    --stopChannel(channelQueue)
     if soundObject.loop then
         SoundManager.queueSound(channelQueue.id, soundObject.name, soundObject.volume, soundObject.loop, soundObject.duration)
     end
@@ -53,16 +53,16 @@ end
 
 script.on_internal_event(Defines.InternalEvents.ON_TICK, function()
     for channelId,channelQueue in pairs(mChannelQueues) do
-        print("Ticking channel", channelId, "timer", channelQueue.currentSoundRemainingTime)
+        -- print("Ticking channel", channelId, "timer", channelQueue.currentSoundRemainingTime)
         if (channelQueue.currentSoundRemainingTime == nil or channelQueue.currentSoundRemainingTime <= 0) then
-            local soundObject = channelQueue.queue:pop_right()
+            local soundObject = channelQueue.queue:pop_left()
             if not soundObject then
                 mChannelQueues[channelId] = nil
             else
                 mChannelQueues[channelId].playbackChannel = playSoundInternal(soundObject, channelQueue)
             end
         else
-            channelQueue.currentSoundRemainingTime = channelQueue.currentSoundRemainingTime - 1
+            channelQueue.currentSoundRemainingTime = channelQueue.currentSoundRemainingTime - time_increment()
         end
     end
 end)
@@ -85,7 +85,7 @@ end
 ---@param duration number how long to wait until this channel can play another sound
 ---@return number channel of the sound.  Not the one hyperspace uses.
 SoundManager.queueSound = function(channelId, soundName, volume, looping, duration)
-    print("queueSound", soundName, volume, looping, channelId, duration)
+    -- print("queueSound", soundName, volume, looping, channelId, duration)
     if not channelId then
         channelId = mNextChannelId
         mNextChannelId = mNextChannelId + 1

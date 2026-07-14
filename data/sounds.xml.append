@@ -10,6 +10,7 @@
 <BASS_small_one volume="4">bass_fishing/small_one.ogg</BASS_small_one>
 <BASS_hey_good_fighting_for_a_small_one volume="4">bass_fishing/hey_good_fighting_for_a_small_one.ogg</BASS_hey_good_fighting_for_a_small_one>
 <BASS_mmh_small_one volume="4">bass_fishing/mmh_small_one.ogg</BASS_mmh_small_one>
+<BASS_release_size volume="4">bass_fishing/release_size.ogg</BASS_release_size>
 
 <!-- Catch Average -->
 <BASS_ok_an_average_size volume="4">bass_fishing/ok_an_average_size.ogg</BASS_ok_an_average_size>
@@ -25,6 +26,7 @@
 <BASS_super_big volume="4">bass_fishing/super_big.ogg</BASS_super_big>
 <BASS_wow_what_a_pull volume="4">bass_fishing/wow_what_a_pull.ogg</BASS_wow_what_a_pull>
 <BASS_big_one volume="4">bass_fishing/big_one.ogg</BASS_big_one>
+<BASS_keeper_size volume="4">bass_fishing/keeper_size.ogg</BASS_keeper_size>
 
 <!-- Catch Huge -->
 <BASS_this_ones_huge volume="4">bass_fishing/this_ones_huge.ogg</BASS_this_ones_huge>
@@ -51,6 +53,7 @@
 <BASS_no_fish volume="4">bass_fishing/no_fish.ogg</BASS_no_fish>
 <BASS_its_gone volume="4">bass_fishing/its_gone.ogg</BASS_its_gone>
 <BASS_line_break volume="4">bass_fishing/line_break.ogg</BASS_line_break>
+<BASS_oh_miss volume="4">bass_fishing/oh_miss.ogg</BASS_oh_miss>
 
 
 <!-- Blue Fish -->
@@ -62,6 +65,7 @@
 <BASS_start volume="4">bass_fishing/start.ogg</BASS_start>
 <BASS_fish volume="4">bass_fishing/fish!.ogg</BASS_fish>
 <BASS_bite volume="4">bass_fishing/bite.ogg</BASS_bite>
+<BASS_fish_2 volume="4">bass_fishing/fish_2.ogg</BASS_fish_2>
 
 <!-- Banter -->
 <BASS_loosen_it volume="4">bass_fishing/loosen_it.ogg</BASS_loosen_it>
@@ -89,6 +93,10 @@
 <BASS_bite_it volume="4">bass_fishing/bite_it.ogg</BASS_bite_it>
 <BASS_hook_it volume="4">bass_fishing/hook_it.ogg</BASS_hook_it>
 <BASS_its_coming_near volume="4">bass_fishing/its_coming_near.ogg</BASS_its_coming_near>
+<BASS_keep_it_tight volume="4">bass_fishing/keep_it_tight.ogg</BASS_keep_it_tight>
+<BASS_wind_it volume="4">bass_fishing/wind_it.ogg</BASS_wind_it>
+<BASS_roll_it_its_on_the_bait volume="4">bass_fishing/roll_it_its_on_the_bait.ogg</BASS_roll_it_its_on_the_bait>
+<BASS_yeah_hes_a_fighter volume="4">bass_fishing/yeah_hes_a_fighter.ogg</BASS_yeah_hes_a_fighter>
 
 <!-- Meaningful Banter -->
 <BASS_lower_the_rod volume="4">bass_fishing/lower_the_rod.ogg</BASS_lower_the_rod>
@@ -300,7 +308,31 @@
         <explore>bass_fishing/AreaBridge.ogg</explore>
     </track>
     <track>
+        <name>contest_of_skill</name>
+        <explore>bass_fishing/fishFight.ogg</explore>
+    </track>
+    <track>
+        <name>big_contest_of_skill</name>
+        <explore>bass_fishing/fishFightBig.ogg</explore>
+    </track>
+    <track>
+        <name>huge_contest_of_skill</name>
+        <explore>bass_fishing/fishFightHuge.ogg</explore>
+    </track>
+    <track>
+        <name>legendary_contest_of_skill</name>
+        <explore>bass_fishing/fishFightBoss.ogg</explore>
+    </track>
+    <track>
         <name>title</name>
         <explore>bass_fishing/MainMenu.ogg</explore>
+    </track>
+    <track>
+        <name>feel_the_heat</name>
+        <explore>bass_fishing/OgRankScreen.ogg</explore>
+    </track>
+    <track>
+        <name>fish_op</name>
+        <explore>bass_fishing/BeginningTheme.ogg</explore>
     </track>
 </music>

@@ -20,7 +20,6 @@
 			<loadEvent>STORAGE_CHECK_JUKEBOX</loadEvent>
 		</event>
 	</mod-append:choice>
-	
 	<mod-append:choice hidden="true" blue="true">
 		<text>Bass Fishing: Lodge Area</text>
 		<event>
@@ -28,8 +27,6 @@
 			<loadEvent>STORAGE_CHECK_JUKEBOX</loadEvent>
 		</event>
 	</mod-append:choice>
-</mod:findName>
-	
 	<mod-append:choice hidden="true" blue="true">
 		<text>Bass Fishing: Inlet Area</text>
 		<event>
@@ -37,12 +34,59 @@
 			<loadEvent>STORAGE_CHECK_JUKEBOX</loadEvent>
 		</event>
 	</mod-append:choice>
-</mod:findName>
-	
 	<mod-append:choice hidden="true" blue="true">
 		<text>Bass Fishing: Bridge Area</text>
 		<event>
 			<playMusic>bridge_area</playMusic>
+			<loadEvent>STORAGE_CHECK_JUKEBOX</loadEvent>
+		</event>
+	</mod-append:choice>
+	<mod-append:choice hidden="true" blue="true">
+		<text>Bass Fishing: Cave Area</text>
+		<event>
+			<playMusic>cave_area</playMusic>
+			<loadEvent>STORAGE_CHECK_JUKEBOX</loadEvent>
+		</event>
+	</mod-append:choice>
+	<mod-append:choice hidden="true" blue="true">
+		<text>Bass Fishing: Cape Area</text>
+		<event>
+			<playMusic>cape_area</playMusic>
+			<loadEvent>STORAGE_CHECK_JUKEBOX</loadEvent>
+		</event>
+	</mod-append:choice>
+	<mod-append:choice hidden="true" blue="true">
+		<text>Bass Fishing: Palace Area</text>
+		<event>
+			<playMusic>palace_area</playMusic>
+			<loadEvent>STORAGE_CHECK_JUKEBOX</loadEvent>
+		</event>
+	</mod-append:choice>
+	<mod-append:choice hidden="true" blue="true">
+		<text>Bass Fishing: Falls Area</text>
+		<event>
+			<playMusic>falls_area</playMusic>
+			<loadEvent>STORAGE_CHECK_JUKEBOX</loadEvent>
+		</event>
+	</mod-append:choice>
+	<mod-append:choice hidden="true" blue="true">
+		<text>Bass Fishing: Title Screen</text>
+		<event>
+			<playMusic>title</playMusic>
+			<loadEvent>STORAGE_CHECK_JUKEBOX</loadEvent>
+		</event>
+	</mod-append:choice>
+	<mod-append:choice hidden="true" blue="true">
+		<text>Bass Fishing: Feel the Heat</text>
+		<event>
+			<playMusic>feel_the_heat</playMusic>
+			<loadEvent>STORAGE_CHECK_JUKEBOX</loadEvent>
+		</event>
+	</mod-append:choice>
+	<mod-append:choice hidden="true" blue="true">
+		<text>Bass Fishing: Opening Cinematic</text>
+		<event>
+			<playMusic>fish_op</playMusic>
 			<loadEvent>STORAGE_CHECK_JUKEBOX</loadEvent>
 		</event>
 	</mod-append:choice>
