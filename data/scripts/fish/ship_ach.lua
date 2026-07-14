@@ -1,3 +1,5 @@
+local fishListener = mods.fishing.fishListener
+
 ----------------------
 -- HELPER FUNCTIONS --
 ----------------------
@@ -54,6 +56,9 @@ local function check_fish_ach(itemName)
         local fishId = string.sub(itemName, 11, string.len(itemName))
         --print(itemName)
         --print("fish_obtained_"..tostring(fishId))
+        if (Hyperspace.metaVariables["fish_obtained_"..tostring(fishId)]) == 0 then
+            fishListener.recordSize()
+        end
         Hyperspace.metaVariables["fish_obtained_"..tostring(fishId)] = 1
         return true
     elseif string_starts(itemName, "FISH_WEAPON_") then

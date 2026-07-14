@@ -97,11 +97,11 @@
 <BASS_wind_it volume="4">bass_fishing/wind_it.ogg</BASS_wind_it>
 <BASS_roll_it_its_on_the_bait volume="4">bass_fishing/roll_it_its_on_the_bait.ogg</BASS_roll_it_its_on_the_bait>
 <BASS_yeah_hes_a_fighter volume="4">bass_fishing/yeah_hes_a_fighter.ogg</BASS_yeah_hes_a_fighter>
+<BASS_slow_it_down volume="4">bass_fishing/slow_it_down.ogg</BASS_slow_it_down>
 
 <!-- Meaningful Banter -->
 <BASS_lower_the_rod volume="4">bass_fishing/lower_the_rod.ogg</BASS_lower_the_rod>
 <BASS_pull_up_the_rod volume="4">bass_fishing/pull_up_the_rod.ogg</BASS_pull_up_the_rod>
-<BASS_slow_it_down volume="4">bass_fishing/slow_it_down.ogg</BASS_slow_it_down>
 <BASS_turn_the_rod volume="4">bass_fishing/turn_the_rod.ogg</BASS_turn_the_rod>
 <BASS_down volume="4">bass_fishing/down.ogg</BASS_down>
 <BASS_left volume="4">bass_fishing/left.ogg</BASS_left>
@@ -135,6 +135,7 @@
 <BASS_get_a_special_lure volume="4">bass_fishing/get_a_special_lure.ogg</BASS_get_a_special_lure>
 
 <!-- Locations -->
+<BASS_go_to volume="4">bass_fishing/go_to.ogg</BASS_go_to>
 <BASS_the_palace volume="4">bass_fishing/the_palace.ogg</BASS_the_palace>
 <BASS_lodge_area volume="4">bass_fishing/lodge_area.ogg</BASS_lodge_area>
 <BASS_next_area volume="4">bass_fishing/next_area.ogg</BASS_next_area>

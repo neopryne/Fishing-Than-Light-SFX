@@ -12,23 +12,13 @@ Cape area for the eventual parahumans crossover
 --When it damages a ship: say hit! hit bonus!
 --when a ship flees: it's gone
 
-Jump menu opened: go to next area
-    check beaconmapplus
-
 todo replace all the music or just during fishing?
-Definitely fade out whatever battle music during fishing and play fish music
-Fish cruiser should play fish music always.
 
 Tourniment series is difficulty select
-make fishing pick from a list of fishing music
-Select a casting point for cultist spells and blood ritual
-Good casting! For DD rituals. 
 
 If I really want to use the beginning theme, I need an animatic for it you can click to dismiss.
-need to replace bp_mus_victory
 
 --todo why are the voice lines so quiet, and don't seem to go louder with volume?
-scaling chance to play the corresponding fight music for a given fish when we start fishing.
 ]]
 
 local time_increment = mods.multiverse.time_increment
@@ -38,10 +28,6 @@ local SoundManager = mods.sounds.manager
 local TIME_SCALE_FACTOR = 0.016687400639057 --Used to convert measurements from my computer in frames to time_increment.
 --Further additions should not use this.
 local WARNING_LENGTHS = {22 * TIME_SCALE_FACTOR, 18 * TIME_SCALE_FACTOR, 14 * TIME_SCALE_FACTOR, 12 * TIME_SCALE_FACTOR}
--- for name,length in pairs(WARNING_LENGTHS) do
---     SoundManager.registerSound(name, length)
--- end
-
 
 local NO_FISH = 0
 local STARTING_BEEP_LEVEL = 3
@@ -71,7 +57,9 @@ local FISH_BANTER = {"BASS_loosen_it", "BASS_good_casting", "BASS_good_fighting"
 local FISH_WEAK = {"BASS_hes_getting_weak", "BASS_youre_almost_there"}
 local LINE_WEAK = {"BASS_the_lines_gonna_break"}
 local FISH_SPLASHES = {"BASS_splash_1", "BASS_splash_2", "BASS_splash_3"}
+local RECORD_SIZE = {"BASS_wow_record_size", "BASS_record-breaking_size"}
 local GAME_OVER = {"BASS_game_over", "BASS_come_on_come_on_try_it_again"}
+local WIN =  {"BASS_thank_you_for_playing", "BASS_terrific_youve_cleared_all_the_areas"}
 local FOE_ESCAPED_SOUNDS = {"BASS_aough", "BASS_damnit", "BASS_ohh_it_was_so_close",
         "BASS_noooooo", "BASS_its_gone"} --when a hostile ship jumps away
 --local FOE_HIT_SOUNDS = {"BASS_hit_bonus"}
@@ -91,7 +79,7 @@ local mLegendHooked = false --meaningful banter
 
 local mSecondSound
 --When game loads:
-local loadSoundsType = math.random(1,1)
+local loadSoundsType = math.ceil(math.random() + .04)
 script.on_init(function(newGame)
     mSecondSound = true
 end)
@@ -226,13 +214,12 @@ fishListener.fishDarts = function()
 end
 
 --All of the meaningful banter has individual timers.
-
 script.on_internal_event(Defines.InternalEvents.ON_TICK, function()
     local commandGui = Hyperspace.Global.GetInstance():GetCApp().gui
     if not mIsFishing or (not (Hyperspace.ships(0)) or Hyperspace.ships(0).iCustomizeMode == 2 or --Either not fishing or paused
     (commandGui.bPaused or commandGui.bAutoPaused or commandGui.event_pause or commandGui.menu_pause)) then return end
     if TIMERS.banter == UNSET then
-        TIMERS.banter = math.random() * 4
+        TIMERS.banter = math.max(2.612, math.random() * 4.1)
     end
     --tick down all active timers
     for key,timer in pairs(TIMERS) do
@@ -244,7 +231,7 @@ script.on_internal_event(Defines.InternalEvents.ON_TICK, function()
     --play banter
     if TIMERS.banter == 0 then
         playRandomSound(FISH_BANTER, 6, false)
-        TIMERS.banter = math.max(1.612, math.random() * 4.1)
+        TIMERS.banter = math.max(1.612, math.random() * 5.1)
     end
 end)
 
@@ -292,6 +279,22 @@ fishListener.outOfBounds = function(rodDifferential)
     else
         mLastCalledDirection = nil --not sure this happens
     end
+end
+
+fishListener.recordSize = function()
+    playRandomSound(RECORD_SIZE, 4, false)
+end
+
+fishListener.selectCastingPoint = function()
+    Hyperspace.Sounds:PlaySoundMix("BASS_select_a_casting_point", 4, false)
+end
+
+fishListener.castAimForTheBigOne = function()
+    Hyperspace.Sounds:PlaySoundMix("BASS_cast_aim_for_the_big_one", 4, false)
+end
+
+fishListener.goodCasting = function()
+    Hyperspace.Sounds:PlaySoundMix("BASS_good_casting", 4, false)
 end
 
 fishListener.resetBeeping = function(index)
@@ -423,9 +426,45 @@ script.on_internal_event(Defines.InternalEvents.PRE_CREATE_CHOICEBOX, function(l
             Hyperspace.Sounds:PlaySoundMix("BASS_fourth_stage", 4, false)
         elseif locationEvent.eventName == "COMBAT_CHECK_HAZARD" then --Reality Manipulator
             Hyperspace.Sounds:PlaySoundMix("BASS_select_weather", 4, false)
+        elseif locationEvent.eventName == "default_victory" or --Missing Chaotic Strawberry, Peace
+            locationEvent.eventName == "FM_FS_ENDING_1_PLAY" or
+            locationEvent.eventName == "FM_FS_ENDING_1_PLAY" or
+            locationEvent.eventName == "FM_FS_ENDING_2_PLAY" or
+            locationEvent.eventName == "FM_FS_ENDING_3_PLAY" or
+            locationEvent.eventName == "FM_FS_ENDING_4_PLAY" or
+            locationEvent.eventName == "FM_FS_ENDING_5_PLAY" or
+            locationEvent.eventName == "FM_FS_ENDING_6_PLAY" or
+            locationEvent.eventName == "KNIGHT_PALACE_THEFT" or
+            locationEvent.eventName == "KNIGHT_BEANS_THEFT" or
+            locationEvent.eventName == "FR_FLAGSHIP_VANCE_SUCCESS" or
+            locationEvent.eventName == "TRUE_VICTORY_BOMB" or
+            locationEvent.eventName == "TRUE_VICTORY_SAVE" or
+            locationEvent.eventName == "THE_ONE_WHO_RHYMES_WIN" or
+            locationEvent.eventName == "THE_ONE_WHO_RHYMES_WIN_CHAOS" or
+            locationEvent.eventName == "HER_FINALE_REAL" or
+            locationEvent.eventName == "NEXUS_HER_HELP_BAD" or
+            locationEvent.eventName == "NEXUS_ENDING_GOOD_SAVE" or
+            locationEvent.eventName == "NEXUS_ENDING_GOOD_KILL" or
+            locationEvent.eventName == "NEXUS_ENDING_BAD_SAVE" or
+            locationEvent.eventName == "NEXUS_ENDING_BAD_KILL" then
+            playRandomSound(WIN, 4, false)
+        elseif locationEvent.eventName == "SHOWDOWN_FAIL" then --Missing Planet Eater, Compromise, Panic Button, Ivar kids
+            playRandomSound(GAME_OVER, 4, false)
+        elseif locationEvent.eventName == "ATLAS_MENU" then --Next area
+            SoundManager.playSound(2, "BASS_go_to", 4, false, bst.sweg)
+            SoundManager.queueSound(2, "BASS_next_area", 4, false, 0)
         end
     end)
+bst.sweg = .62
 
+local mDead = false
+script.on_internal_event(Defines.InternalEvents.ON_TICK, function()
+    if mDead or (not (Hyperspace.ships(0))) then return end
+    if Hyperspace.ships(0).ship.hullIntegrity.first <= 0 then
+        mDead = true
+        playRandomSound(GAME_OVER, 4, false)
+    end
+end)
 
 --Fish graphic
 local fishGraphic = Hyperspace.Resources:CreateImagePrimitiveString("bass_fishing/bass_2lgJrhh_tailed_scaled_2.png", 0, 0,
