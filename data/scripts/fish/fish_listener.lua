@@ -372,9 +372,7 @@ script.on_internal_event(Defines.InternalEvents.PRE_CREATE_CHOICEBOX, function(l
             bassTS2()
         elseif locationEvent.eventName == "FISH_RANDOM_3" or
         locationEvent.eventName == "FISH_FISHGUN" or
-        locationEvent.eventName == "FISH_SCRAP_3" then
-            bassTS3()
-        elseif locationEvent.eventName == "FISH_ULTRA_RARE" or
+        locationEvent.eventName == "FISH_SCRAP_3" or
         locationEvent.eventName == "FISH_FED_GIVE" or
         locationEvent.eventName == "FISH_CIV_GIVE" or
         locationEvent.eventName == "FISH_ENGI_GIVE" or
@@ -391,6 +389,8 @@ script.on_internal_event(Defines.InternalEvents.PRE_CREATE_CHOICEBOX, function(l
         --locationEvent.eventName == "FISH_HEKTAR_GIVE" or hektar is disabled for now
         locationEvent.eventName == "FISH_ANCIENT_GIVE" or
         locationEvent.eventName == "FISH_NEXUS_GIVE" then
+            bassTS3()
+        elseif locationEvent.eventName == "FISH_ULTRA_RARE" then
             bassTS4()
         elseif locationEvent.eventName == "FISHING_STORE" then --Fishing lodge
             Hyperspace.Sounds:PlaySoundMix("BASS_lodge_area", 4, false)
@@ -450,12 +450,27 @@ script.on_internal_event(Defines.InternalEvents.PRE_CREATE_CHOICEBOX, function(l
             playRandomSound(WIN, 4, false)
         elseif locationEvent.eventName == "SHOWDOWN_FAIL" then --Missing Planet Eater, Compromise, Panic Button, Ivar kids
             playRandomSound(GAME_OVER, 4, false)
-        elseif locationEvent.eventName == "ATLAS_MENU" then --Next area
-            SoundManager.playSound(2, "BASS_go_to", 4, false, bst.sweg)
-            SoundManager.queueSound(2, "BASS_next_area", 4, false, 0)
+        -- elseif locationEvent.eventName == "ATLAS_MENU" then --Next area
+        --     SoundManager.playSound(2, "BASS_go_to", 4, false, bst.sweg)
+        --     SoundManager.queueSound(2, "BASS_next_area", 4, false, 0)
         end
     end)
 bst.sweg = .62
+
+local mPlayedGoto = false
+script.on_internal_event(Defines.InternalEvents.ON_TICK, function()
+    local starmap = Hyperspace.App.world.starMap
+    -- print(starmap.bChoosingNewSector, mPlayedGoto)
+    if starmap and starmap.bChoosingNewSector then
+        if not mPlayedGoto then
+            mPlayedGoto = true
+            SoundManager.playSound(2, "BASS_go_to", 4, false, bst.sweg)
+            SoundManager.queueSound(2, "BASS_next_area", 4, false, 0)
+        end
+    else
+        mPlayedGoto = false
+    end
+end)
 
 local mDead = false
 script.on_internal_event(Defines.InternalEvents.ON_TICK, function()
