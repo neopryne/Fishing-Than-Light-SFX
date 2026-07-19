@@ -228,6 +228,18 @@ flagShipBlueprints["BOSS_2_HARD_DLC"] = true
 flagShipBlueprints["BOSS_3_HARD_DLC"] = true
 --#endregion definitions
 
+local WHITE = Graphics.GL_Color(1, 1, 1, 1)
+local YELLOW = Graphics.GL_Color(1, 1, 0, 1)
+local ORANGE = Graphics.GL_Color(1, .5, 0, 1)
+local O_RED = Graphics.GL_Color(1, .33, 0, 1)
+local RED = Graphics.GL_Color(1, 0, 0, 1)
+local GREEN = Graphics.GL_Color(0, 1, 0, .5)
+local BLUE = Graphics.GL_Color(0, 0, 1, .5)
+local INDEGO = Graphics.GL_Color(.5, 0, 1, .5)
+local PURPLE = Graphics.GL_Color(1, 0, 1, .5)
+local BAR_COLORS = {{WHITE, YELLOW, ORANGE, O_RED, RED}, {WHITE, GREEN, BLUE, INDEGO, PURPLE}}
+
+local mCurrentDangerLevels = {1,1} --[0-4]
 local fishBeingCaught = false
 
 local reelPos = 1
@@ -237,6 +249,7 @@ local releaseMax = 27
 local soundTimer=0
 
 local fishBeingCaught2 = false
+local mNumbersLoaded
 
 local fishSpeed2 = 0
 local fishPos2 = 0
@@ -546,6 +559,12 @@ end
 
 script.on_internal_event(Defines.InternalEvents.ON_TICK, function()
     if Hyperspace.Global.GetInstance():GetCApp().world.bStartedGame then
+        if not mNumbersLoaded then
+            fishCatch = Hyperspace.playerVariables["FISH_CATCH_1"]
+            fishCatch2 = Hyperspace.playerVariables["FISH_CATCH_2"]
+            -- print("loaded numbers", fishCatch, fishCatch2) 
+            mNumbersLoaded = true
+        end
         local shipManager = Hyperspace.ships.player
         local maxRodStrength = 5
         for weapon in vter(shipManager:GetWeaponList()) do
@@ -630,6 +649,7 @@ script.on_internal_event(Defines.InternalEvents.ON_TICK, function()
                 local beepingLevel = math.ceil((-(((fishCatch / fishMax) - .4) * 10))) --allow it to be negative
                 -- print("beeping", beepingLevel)
                 fishListener.beepingLevel(1, beepingLevel)
+                mCurrentDangerLevels[1] = math.min(4, math.max(0, beepingLevel))
 
                 if fishSpeed > 0 then
                     fishSpeed = fishSpeed - (gravity) *  Hyperspace.FPS.SpeedFactor/16
@@ -759,6 +779,7 @@ script.on_internal_event(Defines.InternalEvents.ON_TICK, function()
                 local beepingLevel = math.ceil(math.max(0, (-(((fishCatch2 / fishMax) - .4) * 10))))
                 --print("beeping2", beepingLevel)--todo remove
                 fishListener.beepingLevel(2, beepingLevel)
+                mCurrentDangerLevels[2] = math.min(4, math.max(0, beepingLevel))
 
                 fishTimer2 = math.max(fishTimer2 - Hyperspace.FPS.SpeedFactor/16, 0)
                 if fishTimer2 == 0 then
@@ -870,8 +891,6 @@ script.on_internal_event(Defines.InternalEvents.ON_TICK, function()
                     end
                 end
             end
-
-            
         end
         --[[local musicTable = userdata_table(shipManager,"mods.fish.endMusic")
         if musicTable.time then
@@ -882,6 +901,9 @@ script.on_internal_event(Defines.InternalEvents.ON_TICK, function()
                 Hyperspace.CustomEventsParser.GetInstance():LoadEvent(worldManager,"FISH_END_MUSIC",false,-1)
             end
         end]]
+        -- print("Saving numbers", fishCatch, fishCatch2)
+        Hyperspace.playerVariables["FISH_CATCH_1"] = fishCatch
+        Hyperspace.playerVariables["FISH_CATCH_2"] = fishCatch2
     end
 end)
 
@@ -968,7 +990,6 @@ local fish_select_image = Hyperspace.Resources:CreateImagePrimitiveString(
     false)
 
 
-
 script.on_render_event(Defines.RenderEvents.MOUSE_CONTROL, function()
     local commandGui = Hyperspace.Global.GetInstance():GetCApp().gui
     if Hyperspace.Global.GetInstance():GetCApp().world.bStartedGame and Hyperspace.playerVariables.fish_active == 1 and not commandGui.menu_pause then
@@ -991,22 +1012,18 @@ script.on_render_event(Defines.RenderEvents.MOUSE_CONTROL, function()
         Graphics.CSurface.GL_PopMatrix()
 
         if fishNumber > 0 then
-            Graphics.CSurface.GL_PushMatrix()
-            Graphics.CSurface.GL_Translate(xOffset+190,yOffset+18+464-fishCatch,0)
-            Graphics.CSurface.GL_Scale(1,fishCatch,0)
-            Graphics.CSurface.GL_RenderPrimitive(barImage)
-            Graphics.CSurface.GL_PopMatrix()
+            local barColor = BAR_COLORS[1][mCurrentDangerLevels[1] + 1]
+            Graphics.CSurface.GL_DrawRect(xOffset+191, yOffset+18+464-fishCatch, 8, fishCatch, barColor)
         end
         if fishNumber2 > 0 then
-            Graphics.CSurface.GL_PushMatrix()
+            local secondBarXOffset
             if fishNumber > 0 then
-                Graphics.CSurface.GL_Translate(xOffset+190-10,yOffset+18+464-fishCatch2,0)
+                secondBarXOffset = -10
             else
-                Graphics.CSurface.GL_Translate(xOffset+190,yOffset+18+464-fishCatch2,0)
+                secondBarXOffset = 0
             end
-            Graphics.CSurface.GL_Scale(1,fishCatch2,0)
-            Graphics.CSurface.GL_RenderPrimitive(barImage)
-            Graphics.CSurface.GL_PopMatrix()
+            local barColor = BAR_COLORS[1][mCurrentDangerLevels[2] + 1]
+            Graphics.CSurface.GL_DrawRect(xOffset+191+secondBarXOffset, yOffset+18+464-fishCatch2, 8, fishCatch2, barColor)
         end
 
         if fishNumber > 0 then

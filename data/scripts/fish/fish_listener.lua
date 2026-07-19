@@ -32,7 +32,7 @@ local WARNING_LENGTHS = {22 * TIME_SCALE_FACTOR, 18 * TIME_SCALE_FACTOR, 14 * TI
 local NO_FISH = 0
 local STARTING_BEEP_LEVEL = 3
 local UNSET = -1
-local TIMERS = {banter=UNSET, almostThere=UNSET, lineBreak=UNSET, pullDown=UNSET, pullUp=UNSET}
+local TIMERS = {banter=math.max(2.612, math.random() * 4.1), almostThere=0, lineBreak=UNSET, pullDown=UNSET, pullUp=UNSET}
 
 local JUNK_CATCH_SOUNDS = {"BASS_no_fish", "BASS_aough", "BASS_noooooo", "BASS_sigh",
         "BASS_small_one", "BASS_mmh_small_one", "BASS_hey_good_fighting_for_a_small_one", "BASS_release_size"}
@@ -218,9 +218,6 @@ script.on_internal_event(Defines.InternalEvents.ON_TICK, function()
     local commandGui = Hyperspace.Global.GetInstance():GetCApp().gui
     if not mIsFishing or (not (Hyperspace.ships(0)) or Hyperspace.ships(0).iCustomizeMode == 2 or --Either not fishing or paused
     (commandGui.bPaused or commandGui.bAutoPaused or commandGui.event_pause or commandGui.menu_pause)) then return end
-    if TIMERS.banter == UNSET then
-        TIMERS.banter = math.max(2.612, math.random() * 4.1)
-    end
     --tick down all active timers
     for key,timer in pairs(TIMERS) do
         if timer ~= UNSET then
@@ -331,7 +328,10 @@ fishListener.beepingLevel = function(index, level)
             SoundManager.clobberChannel(1)
             if level == -3 then
                 --if math.random() > .83 then
+                if TIMERS.almostThere <= 0 then
                     playRandomSound(FISH_WEAK, 4, false)
+                    TIMERS.almostThere = 3.5
+                end
                 --end
             end
         end
