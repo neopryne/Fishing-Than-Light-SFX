@@ -84,10 +84,6 @@
 		<event load="STORAGE_CHECK" />
 	</choice>
   <checkCargo />
-  <choice hidden="true" req="fish_this_jump" lvl="1">
-    <text>You cannot fish again this jump.</text>
-    <event load="OPTION_INVALID" />
-  </choice>
   <choice hidden="true" req="fish_this_sector" lvl="4" max_lvl="4">
     <text>4 Jumps until fish population has recovered enough for fishing</text>
     <event load="OPTION_INVALID" />
@@ -105,7 +101,7 @@
     <event load="OPTION_INVALID" />
   </choice>
 
-  <choice req="fish_start">
+  <choice req="fish_start" max_group="2">
     <text>Go fishing out of combat.</text>
     <event name="FISHING_START_NOCOMBAT">
       <item_modify>
@@ -114,7 +110,7 @@
       <loadEvent>BASS_FISHING_MUSIC_RANDOM</loadEvent>
     </event>
   </choice>
-  <choice req="fish_start_2">
+  <choice req="fish_start_2" max_group="2">
     <text>Go fishing out of combat again.</text>
     <event name="FISHING_START_NOCOMBAT2">
       <item_modify>
@@ -123,7 +119,7 @@
       <loadEvent>BASS_FISHING_MUSIC_RANDOM</loadEvent>
     </event>
   </choice>
-  <choice req="fish_start_3">
+  <choice req="fish_start_3" max_group="2">
     <text>Go fishing out of combat again.</text>
     <event name="FISHING_START_NOCOMBAT3">
       <item_modify>
@@ -132,7 +128,7 @@
       <loadEvent>BASS_FISHING_MUSIC_RANDOM</loadEvent>
     </event>
   </choice>
-  <choice req="fish_start_4">
+  <choice req="fish_start_4" max_group="2">
     <text>Go fishing out of combat again.</text>
     <event name="FISHING_START_NOCOMBAT4">
       <item_modify>
@@ -141,7 +137,7 @@
       <loadEvent>BASS_FISHING_MUSIC_RANDOM</loadEvent>
     </event>
   </choice>
-  <choice req="fish_start_5">
+  <choice req="fish_start_5" max_group="2">
     <text>Go fishing out of combat again.</text>
     <event name="FISHING_START_NOCOMBAT5">
       <item_modify>
@@ -150,7 +146,7 @@
       <loadEvent>BASS_FISHING_MUSIC_RANDOM</loadEvent>
     </event>
   </choice>
-  <choice req="fish_start_6">
+  <choice req="fish_start_6" max_group="2">
     <text>Go fishing out of combat again.</text>
     <event name="FISHING_START_NOCOMBAT6">
       <item_modify>
@@ -158,6 +154,10 @@
       </item_modify>
       <loadEvent>BASS_FISHING_MUSIC_RANDOM</loadEvent>
     </event>
+  </choice>
+  <choice hidden="true" req="fish_this_jump" lvl="1" max_group="2">
+    <text>You cannot fish again this jump.</text>
+    <event load="OPTION_INVALID" />
   </choice>
   <choice req="BLUELIST_FISHING_RODS_UP" blue="false">
     <text>Upgrade a harpoon.</text>

@@ -125,7 +125,8 @@ local RandomList = {
 local fishListener = mods.fishing.fishListener
 
 -------------the good stuff
-
+--Tiodo weight tick sounds,  TOTAL WEIGHT tracker, weight is ... cost of the fish reward?  * [.75-1.25?]
+--Background is a rect and a circle of slightly grey sky blue.  This makes "record size" banter not make sense with unlocks.
 --#region definitions
 
 local fishSounds = RandomList:New {"fishsplash1", "fishsplash2", "fishsplash3", "fishsplash4", "fishsplash5", "fishsplash6", "fishsplash7"}
@@ -559,9 +560,13 @@ end
 
 script.on_internal_event(Defines.InternalEvents.ON_TICK, function()
     if Hyperspace.Global.GetInstance():GetCApp().world.bStartedGame then
+        local isFishing = false
         if not mNumbersLoaded then
             fishCatch = Hyperspace.playerVariables["FISH_CATCH_1"]
             fishCatch2 = Hyperspace.playerVariables["FISH_CATCH_2"]
+            fishPos = Hyperspace.playerVariables["FISH_POS_1"]
+            fishPos2 = Hyperspace.playerVariables["FISH_POS_2"]
+            selectPos = Hyperspace.playerVariables["FISH_SELECT_POS"]
             -- print("loaded numbers", fishCatch, fishCatch2) 
             mNumbersLoaded = true
         end
@@ -646,6 +651,7 @@ script.on_internal_event(Defines.InternalEvents.ON_TICK, function()
 
 
             if fishNumber > 0 then
+                isFishing = true
                 local beepingLevel = math.ceil((-(((fishCatch / fishMax) - .4) * 10))) --allow it to be negative
                 -- print("beeping", beepingLevel)
                 fishListener.beepingLevel(1, beepingLevel)
@@ -770,6 +776,7 @@ script.on_internal_event(Defines.InternalEvents.ON_TICK, function()
             end
 
             if fishNumber2 > 0 then
+                isFishing = true
                 if fishSpeed2 > 0 then 
                     fishSpeed2 = fishSpeed2 - (gravity) *  Hyperspace.FPS.SpeedFactor/16
                 elseif fishSpeed < 0 then
@@ -902,8 +909,13 @@ script.on_internal_event(Defines.InternalEvents.ON_TICK, function()
             end
         end]]
         -- print("Saving numbers", fishCatch, fishCatch2)
-        Hyperspace.playerVariables["FISH_CATCH_1"] = fishCatch
-        Hyperspace.playerVariables["FISH_CATCH_2"] = fishCatch2
+        if isFishing then
+            Hyperspace.playerVariables["FISH_CATCH_1"] = fishCatch
+            Hyperspace.playerVariables["FISH_CATCH_2"] = fishCatch2
+            Hyperspace.playerVariables["FISH_POS_1"] = fishPos
+            Hyperspace.playerVariables["FISH_POS_2"] = fishPos2
+            Hyperspace.playerVariables["FISH_SELECT_POS"] = selectPos
+        end
     end
 end)
 

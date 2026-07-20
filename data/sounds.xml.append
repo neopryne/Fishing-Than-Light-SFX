@@ -114,7 +114,11 @@
 <!-- Splashes -->
 <BASS_splash_1 volume="4">bass_fishing/sfx/WATER_YOIN.ogg</BASS_splash_1>
 <BASS_splash_2 volume="4">bass_fishing/sfx/WATER_6.ogg</BASS_splash_2>
-<BASS_splash_3 volume="4">bass_fishing/sfx/4_SE_2.ogg</BASS_splash_3>
+<BASS_splash_3 volume="4">bass_fishing/sfx/2_SE_4.ogg</BASS_splash_3>
+<BASS_splash_4 volume="4">bass_fishing/sfx/4_SE_2.ogg</BASS_splash_4>
+<BASS_splash_5 volume="4">bass_fishing/sfx/4_SE_3.ogg</BASS_splash_5>
+<BASS_splash_6 volume="4">bass_fishing/sfx/4_SE_5.ogg</BASS_splash_6>
+<BASS_splash_7 volume="4">bass_fishing/sfx/4_SE_11.ogg</BASS_splash_7>
 
 <!-- Warning -->
 <BASS_warning_1 volume="4">bass_fishing/sfx/WARNING_1.ogg</BASS_warning_1>
@@ -128,6 +132,9 @@
 <BASS_get_big volume="4">bass_fishing/sfx/GET_6.ogg</BASS_get_big>
 <BASS_get_huge volume="4">bass_fishing/sfx/GET_7.ogg</BASS_get_huge>
 <BASS_get_legend volume="4">bass_fishing/sfx/GET_5.ogg</BASS_get_legend>
+
+<!-- Weight Tick -->
+<BASS_time_tick volume="4">bass_fishing/sfx/TIME1.ogg</BASS_time_tick>
 
 <!-- Lures -->
 <BASS_select_a_lure volume="4">bass_fishing/select_a_lure.ogg</BASS_select_a_lure>

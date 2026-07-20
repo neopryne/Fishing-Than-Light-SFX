@@ -32,7 +32,7 @@ local WARNING_LENGTHS = {22 * TIME_SCALE_FACTOR, 18 * TIME_SCALE_FACTOR, 14 * TI
 local NO_FISH = 0
 local STARTING_BEEP_LEVEL = 3
 local UNSET = -1
-local TIMERS = {banter=math.max(2.612, math.random() * 4.1), almostThere=0, lineBreak=UNSET, pullDown=UNSET, pullUp=UNSET}
+local TIMERS = {banter=math.max(2.612, math.random() * 4.1), almostThere=0, lineBreak=0, pullDown=UNSET, pullUp=UNSET}
 
 local JUNK_CATCH_SOUNDS = {"BASS_no_fish", "BASS_aough", "BASS_noooooo", "BASS_sigh",
         "BASS_small_one", "BASS_mmh_small_one", "BASS_hey_good_fighting_for_a_small_one", "BASS_release_size"}
@@ -56,7 +56,8 @@ local FISH_BANTER = {"BASS_loosen_it", "BASS_good_casting", "BASS_good_fighting"
         "BASS_keep_it_tight", "BASS_wind_it", "BASS_roll_it_its_on_the_bait", "BASS_yeah_hes_a_fighter", "BASS_slow_it_down"}
 local FISH_WEAK = {"BASS_hes_getting_weak", "BASS_youre_almost_there"}
 local LINE_WEAK = {"BASS_the_lines_gonna_break"}
-local FISH_SPLASHES = {"BASS_splash_1", "BASS_splash_2", "BASS_splash_3"}
+local FISH_SPLASHES = {"BASS_splash_1", "BASS_splash_2", "BASS_splash_3", "BASS_splash_4",
+         "BASS_splash_5", "BASS_splash_6", "BASS_splash_7"}
 local RECORD_SIZE = {"BASS_wow_record_size", "BASS_record-breaking_size"}
 local GAME_OVER = {"BASS_game_over", "BASS_come_on_come_on_try_it_again"}
 local WIN =  {"BASS_thank_you_for_playing", "BASS_terrific_youve_cleared_all_the_areas"}
@@ -67,17 +68,30 @@ local FOE_MISS_SOUNDS = {"BASS_aough", "BASS_damnit", "BASS_noooooo", "BASS_miss
 local GAME_START = {"BASS_sega_bass_fishing", "BASS_bass_hunter"}
 local GAME_START_2 = {"BASS_sega_bass_fishing_2", "BASS_enjoy_your_fishing"}
 
-
 local mWarnings = {{channel=UNSET, level=UNSET, threshold=STARTING_BEEP_LEVEL, thresholdCleared=false},
         {channel=UNSET, level=UNSET, threshold=STARTING_BEEP_LEVEL, thresholdCleared=false}}
+--bass sound test
+bst = {junk=40 * TIME_SCALE_FACTOR, average=135 * TIME_SCALE_FACTOR, big=260 * TIME_SCALE_FACTOR,
+ huge=310 * TIME_SCALE_FACTOR, legend=10 * TIME_SCALE_FACTOR}
+
+local WEIGHT_BOX_X = 392
+local WEIGHT_BOX_Y = 50
+local WEIGHT_BOX_WIDTH = 103
+local WEIGHT_BOX_HEIGHT = 20
+local FISH_BLUE = Graphics.GL_Color(61/255, 121/255, 255/255, 1)
+local YELLOW = Graphics.GL_Color(1, 1, 0, 1)
+local WARNING_CHANNEL = 1
+local MAIN_CHANNEL = 2
+local BANTER_CHANNEL = 3
 
 --TODO there are two fish numbers, (arbitrarilly many fish numbers) and I need to iterate on them.
 --when you start fishing
 local mCurrentFishNumbers = {NO_FISH, NO_FISH}
 local mIsFishing = false
 local mLegendHooked = false --meaningful banter 
-
+local mSoundManager = SoundManager.new()
 local mSecondSound
+local mCaughtFishRemainingWeight = 0
 --When game loads:
 local loadSoundsType = math.ceil(math.random() + .04)
 script.on_init(function(newGame)
@@ -162,32 +176,118 @@ local function endFish(index)
     end
 end
 
---bass sound test
-bst = {junk=40 * TIME_SCALE_FACTOR, average=135 * TIME_SCALE_FACTOR, big=260 * TIME_SCALE_FACTOR,
- huge=310 * TIME_SCALE_FACTOR, legend=10 * TIME_SCALE_FACTOR}
-function bassTS0()
-    SoundManager.playSound(2, "BASS_get_small", 4, false, bst.junk)
-    SoundManager.queueSound(2, getRandomItem(JUNK_CATCH_SOUNDS), 6, false, 0)
+local function shipSizeRecordKey(shipManager)
+    return "SHIP_FISH_WEIGHT_RECORD_"..shipManager.myBlueprint.blueprintName
 end
 
-function bassTS1()
-    SoundManager.playSound(2, "BASS_get_average", 4, false, bst.average)
-    SoundManager.queueSound(2, getRandomItem(AVERAGE_CATCH_SOUNDS), 6, false, 0)
+local function formatFishWeightString(ozWeight)
+    local lbs = math.floor(ozWeight / 16)
+    local oz = ozWeight % 16
+    return lbs.."lb."..string.format("%02.0f", oz).."oz."
 end
 
-function bassTS2()
-        SoundManager.playSound(2, "BASS_get_big", 4, false, bst.big)
-        SoundManager.queueSound(2, getRandomItem(BIG_CATCH_SOUNDS), 6, false, 0)
+local function drawFishingReadout(string, weight, x, y)
+    Graphics.CSurface.GL_PushMatrix()
+    Graphics.CSurface.GL_DrawRect(x, y, WEIGHT_BOX_WIDTH, WEIGHT_BOX_HEIGHT, FISH_BLUE)
+    local radius = WEIGHT_BOX_HEIGHT / 2
+    local padding = WEIGHT_BOX_HEIGHT / 5
+    Graphics.CSurface.GL_DrawCircle(x, y + radius, radius, FISH_BLUE)
+    Graphics.CSurface.GL_DrawCircle(x + WEIGHT_BOX_WIDTH, y + radius, radius, FISH_BLUE)
+    Graphics.freetype.easy_print(50, x - 2, y + 3, string)
+    Graphics.freetype.easy_print(50, x + radius, y + WEIGHT_BOX_HEIGHT + 3,
+        formatFishWeightString(weight))
+    Graphics.CSurface.GL_PopMatrix()
 end
 
-function bassTS3()
-        SoundManager.playSound(2, "BASS_get_huge", 4, false, bst.huge)
-        SoundManager.queueSound(2, getRandomItem(HUGE_CATCH_SOUNDS), 6, false, 0)
+script.on_render_event(Defines.RenderEvents.MOUSE_CONTROL, function()
+    if Hyperspace.ships.player ~= nil and Hyperspace.ships.player.iCustomizeMode == 2 then
+        drawFishingReadout("LARGEST HAUL", Hyperspace.metaVariables[shipSizeRecordKey(Hyperspace.ships.player)], 51, 66)
+        return
+    end
+end, function() end)
+
+script.on_render_event(Defines.RenderEvents.FTL_BUTTON, function() end, function()
+    local menu = Hyperspace.App.menu
+    if menu.shipBuilder.bOpen then return end
+    -- local mousePos = Hyperspace.Mouse.position
+    -- print(mousePos.x, mousePos.y)
+    drawFishingReadout("TOTAL WEIGHT", Hyperspace.playerVariables.totalFishWeightOz, WEIGHT_BOX_X, WEIGHT_BOX_Y)
+    if mCaughtFishRemainingWeight > 0 then
+        Graphics.CSurface.GL_PushMatrix()
+        Graphics.CSurface.GL_SetColor(YELLOW)
+        Graphics.freetype.easy_print(18, 555, 100, formatFishWeightString(mCaughtFishRemainingWeight))
+        Graphics.CSurface.GL_PopMatrix()
+    end
+end)
+
+
+local mTickingDownWeight = false
+script.on_internal_event(Defines.InternalEvents.ON_TICK, function()
+    if mTickingDownWeight and mCaughtFishRemainingWeight > 0 then
+        mCaughtFishRemainingWeight = mCaughtFishRemainingWeight - 1
+        Hyperspace.playerVariables.totalFishWeightOz = Hyperspace.playerVariables.totalFishWeightOz + 1
+        Hyperspace.metaVariables[shipSizeRecordKey(Hyperspace.ships(0))] = math.max(Hyperspace.playerVariables.totalFishWeightOz, Hyperspace.metaVariables[shipSizeRecordKey(Hyperspace.ships(0))])
+    end
+end)
+
+bst.wait = .8
+local fishTickIncrement = 7
+local function queueSizeTickdown(locationEvent)
+    mTickingDownWeight = false
+    mSoundManager:queueSound(MAIN_CHANNEL, "nothing", 4, false, bst.wait)
+    --Determine size by item cost + scrap + stuff, see CEL impl.
+    mCaughtFishRemainingWeight = 0 --it should already be this.
+    local blueprints = {locationEvent.stuff.weapon, locationEvent.stuff.drone,
+        locationEvent.stuff.augment, locationEvent.stuff.crewBlue} --todo crewBlue doesn't seem to work
+    if locationEvent.stuff.crewType then
+        table.insert(blueprints, Hyperspace.Global.GetInstance():GetBlueprints():GetCrewBlueprint(locationEvent.stuff.crewType))
+    end
+    for _,blueprint in ipairs(blueprints) do
+        if blueprint then
+            mCaughtFishRemainingWeight = mCaughtFishRemainingWeight + blueprint.desc.cost
+        end
+    end
+    mCaughtFishRemainingWeight = mCaughtFishRemainingWeight + (locationEvent.stuff.scrap)
+    mCaughtFishRemainingWeight = mCaughtFishRemainingWeight + (locationEvent.stuff.fuel * 2)
+    mCaughtFishRemainingWeight = mCaughtFishRemainingWeight + (locationEvent.stuff.drones * 7)
+    mCaughtFishRemainingWeight = mCaughtFishRemainingWeight + (locationEvent.stuff.missiles * 6)
+    mCaughtFishRemainingWeight = math.floor(mCaughtFishRemainingWeight * 3.1 + ((math.random() -.5) * (mCaughtFishRemainingWeight / 5)))
+    
+    for i=0, mCaughtFishRemainingWeight, fishTickIncrement do
+        mSoundManager:queueSound(MAIN_CHANNEL, "BASS_time_tick", 4, false, .1, function()
+            mTickingDownWeight = true
+         end)
+    end
 end
 
-function bassTS4()
-        SoundManager.playSound(2, "BASS_get_legend", 4, false, bst.legend)
-        SoundManager.queueSound(2, getRandomItem(LEGEND_CATCH_SOUNDS), 6, false, 0)
+local function bassTS0(locationEvent)
+    mSoundManager:playSound(MAIN_CHANNEL, "BASS_get_small", 4, false, bst.junk)
+    mSoundManager:queueSound(MAIN_CHANNEL, getRandomItem(JUNK_CATCH_SOUNDS), 6, false, 0)
+    queueSizeTickdown(locationEvent)
+end
+
+local function bassTS1(locationEvent)
+    mSoundManager:playSound(MAIN_CHANNEL, "BASS_get_average", 4, false, bst.average)
+    mSoundManager:queueSound(MAIN_CHANNEL, getRandomItem(AVERAGE_CATCH_SOUNDS), 6, false, 0)
+    queueSizeTickdown(locationEvent)
+end
+
+local function bassTS2(locationEvent)
+        mSoundManager:playSound(MAIN_CHANNEL, "BASS_get_big", 4, false, bst.big)
+        mSoundManager:queueSound(MAIN_CHANNEL, getRandomItem(BIG_CATCH_SOUNDS), 6, false, 0)
+        queueSizeTickdown(locationEvent)
+end
+
+local function bassTS3(locationEvent)
+        mSoundManager:playSound(MAIN_CHANNEL, "BASS_get_huge", 4, false, bst.huge)
+        mSoundManager:queueSound(MAIN_CHANNEL, getRandomItem(HUGE_CATCH_SOUNDS), 6, false, 0)
+        queueSizeTickdown(locationEvent)
+end
+
+local function bassTS4(locationEvent)
+        mSoundManager:playSound(MAIN_CHANNEL, "BASS_get_legend", 4, false, bst.legend)
+        mSoundManager:queueSound(MAIN_CHANNEL, getRandomItem(LEGEND_CATCH_SOUNDS), 6, false, 0)
+        queueSizeTickdown(locationEvent)
 end
 
 ---comment
@@ -222,12 +322,12 @@ script.on_internal_event(Defines.InternalEvents.ON_TICK, function()
     for key,timer in pairs(TIMERS) do
         if timer ~= UNSET then
             TIMERS[key] = math.max(0, timer - time_increment(false))
-            --print(key, timer)
+            -- print("Timer", key, timer)
         end
     end
     --play banter
     if TIMERS.banter == 0 then
-        playRandomSound(FISH_BANTER, 6, false)
+        mSoundManager:queueSound(BANTER_CHANNEL, getRandomItem(FISH_BANTER), 6, false, 2)
         TIMERS.banter = math.max(1.612, math.random() * 5.1)
     end
 end)
@@ -238,11 +338,11 @@ local function rodDownRandomSound()
     if x == 1 then
         Hyperspace.Sounds:PlaySoundMix("BASS_lower_the_rod", 4, false)
     elseif x == 2 then
-        SoundManager.playSound(2, "BASS_turn_the_rod", 4, false, bst.swag)
-        SoundManager.queueSound(2, "BASS_right", 4, false, 0)
+        mSoundManager:playSound(MAIN_CHANNEL, "BASS_turn_the_rod", 4, false, bst.swag)
+        mSoundManager:queueSound(MAIN_CHANNEL, "BASS_right", 4, false, 0)
     elseif x == 3 then
-        SoundManager.playSound(2, "BASS_turn_the_rod", 4, false, bst.swag)
-        SoundManager.queueSound(2, "BASS_down", 4, false, 0)
+        mSoundManager:playSound(MAIN_CHANNEL, "BASS_turn_the_rod", 4, false, bst.swag)
+        mSoundManager:queueSound(MAIN_CHANNEL, "BASS_down", 4, false, 0)
     end
 end
 
@@ -251,11 +351,11 @@ local function rodUpRandomSound()
     if x == 1 then
         Hyperspace.Sounds:PlaySoundMix("BASS_pull_up_the_rod", 4, false)
     elseif x == 2 then
-        SoundManager.playSound(2, "BASS_turn_the_rod", 4, false, bst.swag)
-        SoundManager.queueSound(2, "BASS_left", 4, false, 0)
+        mSoundManager:playSound(MAIN_CHANNEL, "BASS_turn_the_rod", 4, false, bst.swag)
+        mSoundManager:queueSound(MAIN_CHANNEL, "BASS_left", 4, false, 0)
     elseif x == 3 then
-        SoundManager.playSound(2, "BASS_turn_the_rod", 4, false, bst.swag)
-        SoundManager.queueSound(2, "BASS_up", 4, false, 0)
+        mSoundManager:playSound(MAIN_CHANNEL, "BASS_turn_the_rod", 4, false, bst.swag)
+        mSoundManager:queueSound(MAIN_CHANNEL, "BASS_up", 4, false, 0)
     end
 end
 
@@ -308,8 +408,7 @@ fishListener.beepingLevel = function(index, level)
     local warning = mWarnings[index]
     local warningChannel = warning.channel
     if not warningChannel == UNSET then
-        -- Hyperspace.Sounds:StopChannel(warningChannel, 0)
-        SoundManager.clobberChannel(warningChannel)
+        mSoundManager:emptyQueue(warningChannel)
         warning.channel = UNSET
         warning.level = UNSET
     end
@@ -325,11 +424,11 @@ fishListener.beepingLevel = function(index, level)
 
     if level ~= warning.level then
         if level <= 0 then
-            SoundManager.clobberChannel(1)
+            mSoundManager:emptyQueue(1)
             if level == -3 then
                 --if math.random() > .83 then
                 if TIMERS.almostThere <= 0 then
-                    playRandomSound(FISH_WEAK, 4, false)
+                    mSoundManager:queueSound(BANTER_CHANNEL, getRandomItem(FISH_WEAK), 4, false, 1.5)
                     TIMERS.almostThere = 3.5
                 end
                 --end
@@ -338,10 +437,12 @@ fishListener.beepingLevel = function(index, level)
         if level > 0 then
             local warningString = "BASS_warning_"..tostring(level)
             -- print("Triggered beeping level", level, WARNING_LENGTHS[level])
-            warning.channel = SoundManager.playSound(1, warningString, 4, true, WARNING_LENGTHS[level])
+            warning.channel = mSoundManager:playSound(WARNING_CHANNEL, warningString, 4, true, WARNING_LENGTHS[level])
             -- Hyperspace.Sounds:PlaySoundMix(warning, 4, true)
-            if math.random() + (level / 20) > 1.07 then
-                playRandomSound(LINE_WEAK, 4, false)
+            --  print("line brea", TIMERS.lineBreak)
+            if TIMERS.lineBreak <= 0 and level == 3 then
+                mSoundManager:queueSound(4, getRandomItem(LINE_WEAK), 6, false, 0)
+                TIMERS.lineBreak = 5
             end
         end
     end
@@ -358,18 +459,18 @@ script.on_internal_event(Defines.InternalEvents.PRE_CREATE_CHOICEBOX, function(l
         end
 
         if locationEvent.eventName == "FISH_JUNK_REAL" then
-            bassTS0()
+            bassTS0(locationEvent)
         elseif locationEvent.eventName == "FISH_RANDOM_1" or
         locationEvent.eventName == "FISH_HEKTAR_1_LOOT" or
         locationEvent.eventName == "FISH_SCRAP_1" then
-            bassTS1()
+            bassTS1(locationEvent)
         elseif locationEvent.eventName == "FISH_RANDOM_2" or
         locationEvent.eventName == "FISH_WEAPON_1" or
         locationEvent.eventName == "FISH_HEKTAR_2_LOOT" or
         locationEvent.eventName == "FISH_DRONE_1" or
         locationEvent.eventName == "FISH_CREW_1" or
         locationEvent.eventName == "FISH_SCRAP_2" then
-            bassTS2()
+            bassTS2(locationEvent)
         elseif locationEvent.eventName == "FISH_RANDOM_3" or
         locationEvent.eventName == "FISH_FISHGUN" or
         locationEvent.eventName == "FISH_SCRAP_3" or
@@ -389,9 +490,9 @@ script.on_internal_event(Defines.InternalEvents.PRE_CREATE_CHOICEBOX, function(l
         --locationEvent.eventName == "FISH_HEKTAR_GIVE" or hektar is disabled for now
         locationEvent.eventName == "FISH_ANCIENT_GIVE" or
         locationEvent.eventName == "FISH_NEXUS_GIVE" then
-            bassTS3()
+            bassTS3(locationEvent)
         elseif locationEvent.eventName == "FISH_ULTRA_RARE" then
-            bassTS4()
+            bassTS4(locationEvent)
         elseif locationEvent.eventName == "FISHING_STORE" then --Fishing lodge
             Hyperspace.Sounds:PlaySoundMix("BASS_lodge_area", 4, false)
         elseif locationEvent.eventName == "FISHING_STORE_KILLED" then --Maw quest
@@ -451,8 +552,8 @@ script.on_internal_event(Defines.InternalEvents.PRE_CREATE_CHOICEBOX, function(l
         elseif locationEvent.eventName == "SHOWDOWN_FAIL" then --Missing Planet Eater, Compromise, Panic Button, Ivar kids
             playRandomSound(GAME_OVER, 4, false)
         -- elseif locationEvent.eventName == "ATLAS_MENU" then --Next area
-        --     SoundManager.playSound(2, "BASS_go_to", 4, false, bst.sweg)
-        --     SoundManager.queueSound(2, "BASS_next_area", 4, false, 0)
+        --     mSoundManager:playSound(MAIN_CHANNEL, "BASS_go_to", 4, false, bst.sweg)
+        --     mSoundManager:queueSound(MAIN_CHANNEL, "BASS_next_area", 4, false, 0)
         end
     end)
 bst.sweg = .62
@@ -464,8 +565,8 @@ script.on_internal_event(Defines.InternalEvents.ON_TICK, function()
     if starmap and starmap.bChoosingNewSector then
         if not mPlayedGoto then
             mPlayedGoto = true
-            SoundManager.playSound(2, "BASS_go_to", 4, false, bst.sweg)
-            SoundManager.queueSound(2, "BASS_next_area", 4, false, 0)
+            mSoundManager:playSound(MAIN_CHANNEL, "BASS_go_to", 4, false, bst.sweg)
+            mSoundManager:queueSound(MAIN_CHANNEL, "BASS_next_area", 4, false, 0)
         end
     else
         mPlayedGoto = false
