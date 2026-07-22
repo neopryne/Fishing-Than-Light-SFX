@@ -73,6 +73,81 @@ To enable Galaxy On Fire, go to the Multiverse Forums and visit the addon sectio
 	</mod:findLike>
 </mod:findName>
 
+<event name="FISH_CHOOSE_ANY">
+	<text>You notice an old fishing harpoon lying around, you decide to take it with you.</text>
+	<weapon name="FISHING_ROD_0"/>
+	<unlockCustomShip silent="false">PLAYER_SHIP_FISHING</unlockCustomShip>
+</event>
+
+<mod:findName type="event" name="START_BEACON_PREP_OPTIONS">
+		<mod-append:choice hidden="true" req="FISH_WEIGHT_RECORD_TOTAL" lvl="100" blue="false">
+        <text>Visit the fish locker.</text>
+        <event>
+            <text>Grab a fish from the collection of previous renegades.</text>
+            <choice hidden="false" blue="false" req="FISH_WEIGHT_RECORD_TOTAL" lvl="100">
+                <text>[Rookie] Get a normal fish.</text>
+                <event>
+                    <weapon name="FISHLIST_1" />
+                    <text>You present your fishing credentials to the crustodeans.  "Alright slugger, one fish coming up!"</text>
+                    <choice hidden="false" blue="false">
+                        <text>Continue...</text>
+                    </choice>
+                </event>
+            </choice>
+            <choice hidden="false" blue="false" req="FISH_WEIGHT_RECORD_TOTAL" lvl="2000">
+                <text>[Challenger] Get a big fish.</text>
+                <event>
+                    <weapon name="FISHLIST_2" />
+                    <text>You present your fishing credentials to the crustodeans.  "You got it boss, here's your fish!"</text>
+                    <choice hidden="false" blue="false">
+                        <text>Continue...</text>
+                    </choice>
+                </event>
+            </choice>
+            <choice hidden="false" blue="false" req="FISH_WEIGHT_RECORD_TOTAL" lvl="5000">
+                <text>[Master] Get a huge fish.</text>
+                <event>
+                    <weapon name="FISHLIST_3" />
+                    <text>You present your fishing credentials to the crustodeans.  "Whoa, alright!  Hey fellas, pull out the big ones!"</text>
+                    <choice hidden="false" blue="false">
+                        <text>Continue...</text>
+                    </choice>
+                </event>
+            </choice>
+            <choice hidden="false" blue="false" req="FISH_WEIGHT_RECORD_TOTAL" lvl="10000">
+                <text>[Grand Master] Get a legendary fish.</text>
+                <event>
+                    <weapon name="FISHLIST_LEG" />
+                    <text>You present your fishing credentials to the crustodeans.  "Well now that's not something you see every day." He nods. "Your items will be beamed abord presently."</text>
+                    <choice hidden="false" blue="false">
+                        <text>Continue...</text>
+                    </choice>
+                </event>
+            </choice>
+            <choice hidden="false" blue="false" req="FISH_WEIGHT_RECORD_TOTAL" lvl="500">
+                <text>[Professional] Get a fish gun.</text>
+                <event>
+                    <weapon name="FISHLIST_GUNS" />
+                    <text>You present your fishing credentials to the crustodeans.  Eyes glinting, they hand you a gunfish. "I see you're a renegade of fine taste! You gotta tell me how it does for you after you take it for a spin."</text>
+                    <choice hidden="false" blue="false">
+                        <text>Continue...</text>
+                    </choice>
+                </event>
+            </choice>
+            <choice hidden="false" blue="false" req="FISH_WEIGHT_RECORD_TOTAL" lvl="100000">
+                <text>[Fish Lord] Take your pick of everything. todo add this</text>
+                <event>
+                    <text>You stride into the Hall of Fish, clearing the security checkpoint with a flash of your cod-tier fishing creds. Rows upon rows of fish unfold before you. Never before nor since has such a collection been at one captain's disposal.  You muse over your options...</text>
+                    <choice hidden="false" blue="false">
+                        <text>Continue...</text>
+                        <event load="FISH_ULTRA_RARE" />
+                    </choice>
+                </event>
+            </choice>
+        </event>
+    </mod-append:choice>
+</mod:findName>
+
 
 <mod:findName type="event" name="START_BEACON_REAL" limit="1">
   <mod:findLike type="eventButton">
