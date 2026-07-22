@@ -80,6 +80,7 @@ local WEIGHT_BOX_WIDTH = 103
 local WEIGHT_BOX_HEIGHT = 20
 local FISH_BLUE = Graphics.GL_Color(61/255, 121/255, 255/255, 1)
 local YELLOW = Graphics.GL_Color(1, 1, 0, 1)
+local OFF_YELLOW = Graphics.GL_Color(252/256, 217/256, 0, 1)
 local WARNING_CHANNEL = 1
 local MAIN_CHANNEL = 2
 local BANTER_CHANNEL = 3
@@ -202,7 +203,6 @@ end
 script.on_render_event(Defines.RenderEvents.MOUSE_CONTROL, function()
     if Hyperspace.ships.player ~= nil and Hyperspace.ships.player.iCustomizeMode == 2 then
         drawFishingReadout("LARGEST HAUL", Hyperspace.metaVariables[shipSizeRecordKey(Hyperspace.ships.player)], 51, 66)
-        return
     end
 end, function() end)
 
@@ -239,13 +239,18 @@ local function queueSizeTickdown(locationEvent, inflationFactor)
     mSoundManager:queueSound(MAIN_CHANNEL, "nothing", 4, false, bst.wait)
     --Determine size by item cost + scrap + stuff, see CEL impl.
     mCaughtFishRemainingWeight = 0 --it should already be this.
+    -- print("crew?", locationEvent.stuff.crewType, locationEvent.stuff.crewBlue, locationEvent.stuff.crew)
     local blueprints = {locationEvent.stuff.weapon, locationEvent.stuff.drone,
         locationEvent.stuff.augment, locationEvent.stuff.crewBlue} --todo crewBlue doesn't seem to work
     if locationEvent.stuff.crewType then
         table.insert(blueprints, Hyperspace.Global.GetInstance():GetBlueprints():GetCrewBlueprint(locationEvent.stuff.crewType))
     end
+    if locationEvent.stuff.crewBlue then
+        table.insert(blueprints, locationEvent.stuff.crewBlue)
+    end
     for _,blueprint in ipairs(blueprints) do
         if blueprint then
+            -- print("Adding blueprint weight", blueprint.desc.cost, blueprint.desc.description, blueprint.desc.shortTitle)
             mCaughtFishRemainingWeight = mCaughtFishRemainingWeight + blueprint.desc.cost
         end
     end
@@ -608,6 +613,14 @@ script.on_render_event(Defines.RenderEvents.MAIN_MENU, function() end, function(
     Graphics.CSurface.GL_Translate(961, 53, 0)
     Graphics.CSurface.GL_RenderPrimitive(fishGraphic)
     Graphics.CSurface.GL_PopMatrix()
+
+    local totalWeight = Hyperspace.metaVariables["FISH_WEIGHT_RECORD_TOTAL"]
+    if totalWeight > 0 then
+        Graphics.CSurface.GL_PushMatrix()
+        Graphics.CSurface.GL_SetColor(OFF_YELLOW)
+        Graphics.freetype.easy_print(24, 850, -7, "Total fish: "..formatFishWeightString(totalWeight))
+        Graphics.CSurface.GL_PopMatrix()
+    end
 end)
 
 --When you start a run? You get the achievement for total haul
