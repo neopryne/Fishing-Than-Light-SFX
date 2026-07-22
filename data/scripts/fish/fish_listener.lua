@@ -630,6 +630,7 @@ local FISH_ACHIVE_LEVELS = {
         {score=100000 * lbsPerOzs, text="Hall of Fish unlocked!", achievement="ACH_FISH_MILESTONE_5"}}
 
 local function updateTotalFishScore()
+    -- print("updateTotalFishScore")
     local runningTotal = 0
     for _,ship in ipairs(mods.no_console.get_ship_list()) do
         -- print("Adding ship", ship.id, Hyperspace.metaVariables["SHIP_FISH_WEIGHT_RECORD_"..ship.id], runningTotal)
@@ -637,18 +638,15 @@ local function updateTotalFishScore()
     end
     --Don't ever reduce this in case the player removes mods.
     Hyperspace.metaVariables["FISH_WEIGHT_RECORD_TOTAL"] = math.max(runningTotal, Hyperspace.metaVariables["FISH_WEIGHT_RECORD_TOTAL"])
-
+    local highScore = Hyperspace.metaVariables["FISH_WEIGHT_RECORD_TOTAL"]
     for _,achievement in ipairs(FISH_ACHIVE_LEVELS) do
-        if runningTotal >= achievement.score then
-            print("cleared", achievement.achievement, achievement.text)
+        -- print("checking", achievement.achievement, achievement.text)
+        if highScore >= achievement.score then
+            -- print("cleared", achievement.achievement, achievement.text)
             Hyperspace.CustomAchievementTracker.instance:SetAchievement(achievement.achievement, false)
         end
     end
-    --todo proc achievements if over certain milestones.
-    --[[I need to x16 the reqs.
-            <achievement silent="false">ACH_BOON_FISH</achievement>
-            <metaVariable name="prof_r_boon_fish" op="set" val="1" />>('>
-            ]] --I will now proceed to pleasure myself with this fish.
+    --I will now proceed to pleasure myself with this fish.
 end
 
 script.on_init(function(newGame)
