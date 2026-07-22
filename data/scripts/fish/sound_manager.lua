@@ -111,6 +111,7 @@ end
 ---@param channelNumber number the channel ID returned by queueSound or playSound
 function SoundManager:emptyQueue(channelNumber)
     local channelQueue = self._channelQueues[channelNumber]
+    if not channelQueue then return end
     if channelQueue then
         emptyQueue(channelQueue)
     end
@@ -120,6 +121,7 @@ end
 ---@param channelNumber number the channel ID returned by queueSound or playSound   May need to rework looping impl.
 function SoundManager:skipSound(channelNumber)
     local channelQueue = self._channelQueues[channelNumber]
+    if not channelQueue then return end
     local hsChannel = channelQueue.playbackChannel
     if hsChannel then
         Hyperspace.Sounds:StopChannel(hsChannel, 0)

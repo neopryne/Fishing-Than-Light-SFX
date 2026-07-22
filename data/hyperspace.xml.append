@@ -7,6 +7,7 @@
 <mod:findLike type="scripts" limit="1">
     <mod-append:script>data/scripts/fish/init.lua</mod-append:script>
     <mod-append:script>data/scripts/fish/deque.lua</mod-append:script>
+    <mod-append:script>data/scripts/fish/ship_to_info.lua</mod-append:script>
     <mod-append:script>data/scripts/fish/sound_manager.lua</mod-append:script>
     <mod-append:script>data/scripts/fish/fish_listener.lua</mod-append:script>
     <mod-append:script>data/scripts/fish/fishing.lua</mod-append:script>

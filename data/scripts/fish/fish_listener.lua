@@ -139,9 +139,9 @@ fishListener.onStartFishing = function(fishNumbers)
         mLegendHooked = true
     end
     if mLegendHooked then
-        playRandomSound(LEGEND_BEGIN, 4, false)
+        mSoundManager:queueSound(BANTER_CHANNEL, getRandomItem(LEGEND_BEGIN), 4, false, 1.2)
     else
-        playRandomSound(FISH_BEGIN, 4, false)
+        mSoundManager:queueSound(BANTER_CHANNEL, getRandomItem(FISH_BEGIN), 4, false, .3)
     end
 
     --I have no idea why this works, but this only activates while in combat, which is exactly what I wanted, but idk why it does that.
@@ -232,8 +232,10 @@ end)
 
 bst.wait = .8
 local fishTickIncrement = 7
-local function queueSizeTickdown(locationEvent)
+local function queueSizeTickdown(locationEvent, inflationFactor)
     mTickingDownWeight = false
+    mSoundManager:emptyQueue(BANTER_CHANNEL)
+    mSoundManager:skipSound(BANTER_CHANNEL)
     mSoundManager:queueSound(MAIN_CHANNEL, "nothing", 4, false, bst.wait)
     --Determine size by item cost + scrap + stuff, see CEL impl.
     mCaughtFishRemainingWeight = 0 --it should already be this.
@@ -251,7 +253,7 @@ local function queueSizeTickdown(locationEvent)
     mCaughtFishRemainingWeight = mCaughtFishRemainingWeight + (locationEvent.stuff.fuel * 2)
     mCaughtFishRemainingWeight = mCaughtFishRemainingWeight + (locationEvent.stuff.drones * 7)
     mCaughtFishRemainingWeight = mCaughtFishRemainingWeight + (locationEvent.stuff.missiles * 6)
-    mCaughtFishRemainingWeight = math.floor(mCaughtFishRemainingWeight * 3.1 + ((math.random() -.5) * (mCaughtFishRemainingWeight / 5)))
+    mCaughtFishRemainingWeight = math.floor(mCaughtFishRemainingWeight * inflationFactor * 3.1 + ((math.random() -.5) * (mCaughtFishRemainingWeight / 5)))
     
     for i=0, mCaughtFishRemainingWeight, fishTickIncrement do
         mSoundManager:queueSound(MAIN_CHANNEL, "BASS_time_tick", 4, false, .1, function()
@@ -260,34 +262,46 @@ local function queueSizeTickdown(locationEvent)
     end
 end
 
+local function ignoreNextEvent()
+    -- if Hyperspace.metaVariables.fish_ignore_next_catch == 1 then
+    --     Hyperspace.metaVariables.fish_ignore_next_catch = 0
+    --     return true
+    -- end
+end
+
 local function bassTS0(locationEvent)
+    if ignoreNextEvent() then return end
     mSoundManager:playSound(MAIN_CHANNEL, "BASS_get_small", 4, false, bst.junk)
     mSoundManager:queueSound(MAIN_CHANNEL, getRandomItem(JUNK_CATCH_SOUNDS), 6, false, 0)
-    queueSizeTickdown(locationEvent)
+    queueSizeTickdown(locationEvent, 1)
 end
 
 local function bassTS1(locationEvent)
+    if ignoreNextEvent() then return end
     mSoundManager:playSound(MAIN_CHANNEL, "BASS_get_average", 4, false, bst.average)
     mSoundManager:queueSound(MAIN_CHANNEL, getRandomItem(AVERAGE_CATCH_SOUNDS), 6, false, 0)
-    queueSizeTickdown(locationEvent)
+    queueSizeTickdown(locationEvent, 1.9)
 end
 
 local function bassTS2(locationEvent)
-        mSoundManager:playSound(MAIN_CHANNEL, "BASS_get_big", 4, false, bst.big)
-        mSoundManager:queueSound(MAIN_CHANNEL, getRandomItem(BIG_CATCH_SOUNDS), 6, false, 0)
-        queueSizeTickdown(locationEvent)
+    if ignoreNextEvent() then return end
+    mSoundManager:playSound(MAIN_CHANNEL, "BASS_get_big", 5, false, bst.big)
+    mSoundManager:queueSound(MAIN_CHANNEL, getRandomItem(BIG_CATCH_SOUNDS), 6, false, 0)
+    queueSizeTickdown(locationEvent, 1.8)
 end
 
 local function bassTS3(locationEvent)
-        mSoundManager:playSound(MAIN_CHANNEL, "BASS_get_huge", 4, false, bst.huge)
-        mSoundManager:queueSound(MAIN_CHANNEL, getRandomItem(HUGE_CATCH_SOUNDS), 6, false, 0)
-        queueSizeTickdown(locationEvent)
+    if ignoreNextEvent() then return end
+    mSoundManager:playSound(MAIN_CHANNEL, "BASS_get_huge", 6, false, bst.huge)
+    mSoundManager:queueSound(MAIN_CHANNEL, getRandomItem(HUGE_CATCH_SOUNDS), 6, false, 0)
+    queueSizeTickdown(locationEvent, 1.8)
 end
 
 local function bassTS4(locationEvent)
-        mSoundManager:playSound(MAIN_CHANNEL, "BASS_get_legend", 4, false, bst.legend)
-        mSoundManager:queueSound(MAIN_CHANNEL, getRandomItem(LEGEND_CATCH_SOUNDS), 6, false, 0)
-        queueSizeTickdown(locationEvent)
+    if ignoreNextEvent() then return end
+    mSoundManager:playSound(MAIN_CHANNEL, "BASS_get_legend", 6, false, bst.legend)
+    mSoundManager:queueSound(MAIN_CHANNEL, getRandomItem(LEGEND_CATCH_SOUNDS), 6, false, 0)
+    queueSizeTickdown(locationEvent, 1.6)
 end
 
 ---comment
@@ -458,22 +472,22 @@ script.on_internal_event(Defines.InternalEvents.PRE_CREATE_CHOICEBOX, function(l
             end
         end
 
-        if locationEvent.eventName == "FISH_JUNK_REAL" then
+        if locationEvent.eventName == "FISH_JUNK_REAL" or
+        locationEvent.eventName == "FISH_SCRAP_1" then
             bassTS0(locationEvent)
         elseif locationEvent.eventName == "FISH_RANDOM_1" or
         locationEvent.eventName == "FISH_HEKTAR_1_LOOT" or
-        locationEvent.eventName == "FISH_SCRAP_1" then
+        locationEvent.eventName == "FISH_SCRAP_2" then
             bassTS1(locationEvent)
         elseif locationEvent.eventName == "FISH_RANDOM_2" or
         locationEvent.eventName == "FISH_WEAPON_1" or
         locationEvent.eventName == "FISH_HEKTAR_2_LOOT" or
         locationEvent.eventName == "FISH_DRONE_1" or
         locationEvent.eventName == "FISH_CREW_1" or
-        locationEvent.eventName == "FISH_SCRAP_2" then
+        locationEvent.eventName == "FISH_SCRAP_3" then
             bassTS2(locationEvent)
         elseif locationEvent.eventName == "FISH_RANDOM_3" or
         locationEvent.eventName == "FISH_FISHGUN" or
-        locationEvent.eventName == "FISH_SCRAP_3" or
         locationEvent.eventName == "FISH_FED_GIVE" or
         locationEvent.eventName == "FISH_CIV_GIVE" or
         locationEvent.eventName == "FISH_ENGI_GIVE" or
@@ -594,4 +608,28 @@ script.on_render_event(Defines.RenderEvents.MAIN_MENU, function() end, function(
     Graphics.CSurface.GL_Translate(961, 53, 0)
     Graphics.CSurface.GL_RenderPrimitive(fishGraphic)
     Graphics.CSurface.GL_PopMatrix()
+end)
+
+--When you start a run? You get the achievement for total haul
+
+local function updateTotalFishScore()
+    local runningTotal = 0
+    for _,ship in ipairs(mods.no_console.get_ship_list()) do
+        -- print("Adding ship", ship.id, Hyperspace.metaVariables["SHIP_FISH_WEIGHT_RECORD_"..ship.id], runningTotal)
+        runningTotal = runningTotal + Hyperspace.metaVariables["SHIP_FISH_WEIGHT_RECORD_"..ship.id]
+    end
+    --Don't ever reduce this in case the player removes mods.
+    Hyperspace.metaVariables["FISH_WEIGHT_RECORD_TOTAL"] = math.max(runningTotal, Hyperspace.metaVariables["FISH_WEIGHT_RECORD_TOTAL"])
+    --todo proc achievements if over certain milestones.
+    --[[I need to x16 the reqs.
+    
+            <achievement silent="false">ACH_BOON_FISH</achievement>
+            <metaVariable name="prof_r_boon_fish" op="set" val="1" />
+            ]] --I will now proceed to pleasure myself with this fish.
+end
+
+script.on_init(function(newGame)
+    if newGame then
+        updateTotalFishScore()
+    end
 end)
