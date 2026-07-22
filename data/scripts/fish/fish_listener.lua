@@ -640,6 +640,7 @@ local function updateTotalFishScore()
 
     for _,achievement in ipairs(FISH_ACHIVE_LEVELS) do
         if runningTotal >= achievement.score then
+            print("cleared", achievement.achievement, achievement.text)
             Hyperspace.CustomAchievementTracker.instance:SetAchievement(achievement.achievement, false)
         end
     end

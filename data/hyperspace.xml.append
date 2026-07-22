@@ -1845,6 +1845,7 @@
 				<multiDifficulty>false</multiDifficulty>
             </achievement>
         </section>
+
         <section text="Fishing Rookie" hidden="false">
             <achievement name="ACH_FISH_MILESTONE_1">
 				<name>Fishing Rookie</name>
@@ -1946,6 +1947,7 @@
 				<multiDifficulty>false</multiDifficulty>
             </achievement>
         </section>
+        
         <section text="Fish Boon" hidden="false">
             <achievement name="ACH_BOON_FISH">
 				<name>Blessing of Fish</name>
