@@ -87,6 +87,7 @@ Prove your competency in battle and I will join with you."
 
 You move in and find a strange looking weapon resting in the middle of the wreck, it appears the autoship has formed itself into a weapon for your use.</text>
     <weapon name="FISH_MAW_1_000"/>
+    <metaVariable name="fish_obtained_maw" op="set" val="1"/>
     <autoReward level="LOW">standard</autoReward>
     <choice>
         <text>Continue...</text>

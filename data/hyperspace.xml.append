@@ -33,7 +33,6 @@
     </mod:findLike>
 </mod:findLike>
 
-
 <augments>
     <aug name="FISHING_STATION_AUGMENT">
         <statBoosts>
@@ -122,6 +121,7 @@
 
     <metaVariable name="prof_r_boon_fish" op="set" val="0" />
     <metaVariable name="prof_hotkey_fish" op="set" val="9"/>
+    <metaVariable name="fish_obtained_maw" op="set" val="0"/>
     <variable name="fish_sector" op="set" val="0"/>
     <variable name="fish_active" op="set" val="0"/>
     <variable name="fish_this_sector" op="set" val="0"/>
@@ -1842,6 +1842,107 @@
                 <header>Fish Caught!</header>
                 <icon>fishMISSILE_2</icon>
                 <variable name="fish_obtained_MISSILE_2" amount="1" />
+				<multiDifficulty>false</multiDifficulty>
+            </achievement>
+        </section>
+        <section text="Fishing Rookie" hidden="false">
+            <achievement name="ACH_FISH_MILESTONE_1">
+				<name>Fishing Rookie</name>
+				<secretDescription>Get 1000 pounds of fish!</secretDescription>
+				<description>Reach 1000 lbs. of total catch weight across all ships.  Next milestone at 1500 lbs.
+				You can now select getting a fish for your prep option.</description>
+				<header>Milestone Get!</header>
+				<icon>ach_boon_fish</icon>
+				<multiDifficulty>false</multiDifficulty>
+            </achievement>
+            <achievement name="ACH_FISH_MILESTONE_GUN">
+				<name>Fishing Professional</name>
+				<secretDescription>Get 1500 pounds of fish!</secretDescription>
+				<description>Reach 1500 lbs. of total catch weight across all ships.  Next milestone at 2000 lbs.
+				You can now select getting a fishgun for your prep option.</description>
+				<header>Milestone Get!</header>
+				<icon>ach_boon_fish</icon>
+				<multiDifficulty>false</multiDifficulty>
+            </achievement>
+            <achievement name="ACH_FISH_MILESTONE_2">
+				<name>Fishing Master</name>
+				<secretDescription>Get 2000 pounds of fish!</secretDescription>
+				<description>Reach 2000 lbs. of total catch weight across all ships.  Next milestone at 3000 lbs.
+				You can now select a big fish for your prep option.</description>
+				<header>Milestone Get!</header>
+				<icon>ach_boon_fish</icon>
+				<multiDifficulty>false</multiDifficulty>
+            </achievement>
+            <achievement name="ACH_FISH_MILESTONE_1_1">
+				<name>Visionary Rookie</name>
+				<secretDescription>Get 3000 pounds of fish!</secretDescription>
+				<description>Reach 3000 lbs. of total catch weight across all ships.  Next milestone at 5000 lbs.
+				You can now see the first fish in your prep options.</description>
+				<header>Milestone Get!</header>
+				<icon>ach_boon_fish</icon>
+				<multiDifficulty>false</multiDifficulty>
+            </achievement>
+            <achievement name="ACH_FISH_MILESTONE_3">
+				<name>Fishing Grand Master</name>
+				<secretDescription>Get 5000 pounds of fish!</secretDescription>
+				<description>Reach 5000 lbs. of total catch weight across all ships.  Next milestone at 7500 lbs.
+				You can now select a huge fish for your prep option.</description>
+				<header>Milestone Get!</header>
+				<icon>ach_boon_fish</icon>
+				<multiDifficulty>false</multiDifficulty>
+            </achievement>
+            <achievement name="ACH_FISH_MILESTONE_GUN_1">
+				<name>Visionary Professional</name>
+				<secretDescription>Get 7500 pounds of fish!</secretDescription>
+				<description>Reach 7500 lbs. of total catch weight across all ships.  Next milestone at 8000 lbs.
+				You can now see the fishgun in your prep options.</description>
+				<header>Milestone Get!</header>
+				<icon>ach_boon_fish</icon>
+				<multiDifficulty>false</multiDifficulty>
+            </achievement>
+            <achievement name="ACH_FISH_MILESTONE_2_1">
+				<name>Visionary Master</name>
+				<secretDescription>Get 8000 pounds of fish!</secretDescription>
+				<description>Reach 8000 lbs. of total catch weight across all ships.  Next milestone at 10000 lbs.
+				You can now see the big fish in your prep options.</description>
+				<header>Milestone Get!</header>
+				<icon>ach_boon_fish</icon>
+				<multiDifficulty>false</multiDifficulty>
+            </achievement>
+            <achievement name="ACH_FISH_MILESTONE_4">
+				<name>Fishing Legend</name>
+				<secretDescription>Get 10000 pounds of fish!</secretDescription>
+				<description>Reach 10000 lbs. of total catch weight across all ships.  Next milestone at 15000 lbs.
+				You can now select a legendary fish for your prep option.</description>
+				<header>Milestone Get!</header>
+				<icon>ach_boon_fish</icon>
+				<multiDifficulty>false</multiDifficulty>
+            </achievement>
+            <achievement name="ACH_FISH_MILESTONE_3_1">
+				<name>Visionary Grand Master</name>
+				<secretDescription>Get 15000 pounds of fish!</secretDescription>
+				<description>Reach 15000 lbs. of total catch weight across all ships.  Next milestone at 60000 lbs.
+				You can now see the huge fish in your prep options.</description>
+				<header>Milestone Get!</header>
+				<icon>ach_boon_fish</icon>
+				<multiDifficulty>false</multiDifficulty>
+            </achievement>
+            <achievement name="ACH_FISH_MILESTONE_4_1">
+				<name>Visionary Legend</name>
+				<secretDescription>Get 60000 pounds of fish!</secretDescription>
+				<description>Reach 60000 lbs. of total catch weight across all ships.  Next milestone at 100000 lbs.
+				You can now see the huge fish in your prep options.</description>
+				<header>Milestone Get!</header>
+				<icon>ach_boon_fish</icon>
+				<multiDifficulty>false</multiDifficulty>
+            </achievement>
+            <achievement name="ACH_FISH_MILESTONE_5">
+				<name>Lord of Fishing</name>
+				<secretDescription>Get 100000 pounds of fish!</secretDescription>
+				<description>Reach 100000 lbs. of total catch weight across all ships.  You're the big kahuna.
+				You can now select any fish in your prep options.</description>
+				<header>Milestones Complete!</header>
+				<icon>ach_boon_fish</icon>
 				<multiDifficulty>false</multiDifficulty>
             </achievement>
         </section>

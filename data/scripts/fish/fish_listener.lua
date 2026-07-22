@@ -611,6 +611,23 @@ script.on_render_event(Defines.RenderEvents.MAIN_MENU, function() end, function(
 end)
 
 --When you start a run? You get the achievement for total haul
+--hs key is FISH_ACHIVE_LEVELS_[index]
+--also play the achievement sound because I don't want to do real achivements.
+--If i switch to those I'll change the metavars.
+--Total catch weight
+local lbsPerOzs = 16
+local FISH_ACHIVE_LEVELS = {
+        {score=1000 * lbsPerOzs, text="Fish options unlocked!", achievement="ACH_FISH_MILESTONE_1", sound="BASS_rookie"},
+        {score=1500 * lbsPerOzs, text="Fish guns unlocked!", achievement="ACH_FISH_MILESTONE_GUN"},
+        {score=2000 * lbsPerOzs, text="Big fish unlocked!", achievement="ACH_FISH_MILESTONE_2"},
+        {score=3000 * lbsPerOzs, text="Fish vision unlocked!", achievement="ACH_FISH_MILESTONE_1_1"},
+        {score=5000 * lbsPerOzs, text="Huge fish unlocked!", achievement="ACH_FISH_MILESTONE_3", sound="BASS_master"},
+        {score=7500 * lbsPerOzs, text="Fish gun vision unlocked!", achievement="ACH_FISH_MILESTONE_GUN_1"},
+        {score=8000 * lbsPerOzs, text="Big fish vision unlocked!", achievement="ACH_FISH_MILESTONE_2_1"},
+        {score=10000 * lbsPerOzs, text="Legendary fish unlocked!", achievement="ACH_FISH_MILESTONE_4", sound="BASS_grand_master"},
+        {score=15000 * lbsPerOzs, text="Huge fish vision unlocked!", achievement="ACH_FISH_MILESTONE_3_1"},
+        {score=60000 * lbsPerOzs, text="Legendary fish vision unlocked!", achievement="ACH_FISH_MILESTONE_4_1"},
+        {score=100000 * lbsPerOzs, text="Hall of Fish unlocked!", achievement="ACH_FISH_MILESTONE_5"}}
 
 local function updateTotalFishScore()
     local runningTotal = 0
@@ -620,11 +637,16 @@ local function updateTotalFishScore()
     end
     --Don't ever reduce this in case the player removes mods.
     Hyperspace.metaVariables["FISH_WEIGHT_RECORD_TOTAL"] = math.max(runningTotal, Hyperspace.metaVariables["FISH_WEIGHT_RECORD_TOTAL"])
+
+    for _,achievement in ipairs(FISH_ACHIVE_LEVELS) do
+        if runningTotal >= achievement.score then
+            Hyperspace.CustomAchievementTracker.instance:SetAchievement(achievement.achievement, false)
+        end
+    end
     --todo proc achievements if over certain milestones.
     --[[I need to x16 the reqs.
-    
             <achievement silent="false">ACH_BOON_FISH</achievement>
-            <metaVariable name="prof_r_boon_fish" op="set" val="1" />
+            <metaVariable name="prof_r_boon_fish" op="set" val="1" />>('>
             ]] --I will now proceed to pleasure myself with this fish.
 end
 

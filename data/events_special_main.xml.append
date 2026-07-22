@@ -74,73 +74,517 @@ To enable Galaxy On Fire, go to the Multiverse Forums and visit the addon sectio
 </mod:findName>
 
 <event name="FISH_CHOOSE_ANY">
-	<text>You notice an old fishing harpoon lying around, you decide to take it with you.</text>
-	<weapon name="FISHING_ROD_0"/>
-	<unlockCustomShip silent="false">PLAYER_SHIP_FISHING</unlockCustomShip>
+	<text> Rows upon rows of fish unfold before you. Never before nor since has such a collection been at one captain's disposal.  You muse over your options...</text>
+  <choice hidden="false" blue="false">
+      <text>>&lt;&gt;</text>
+      <event>
+          <weapon name="FISH_FOOD_0" />
+          <text>You take your prize.</text>
+      </event>
+  </choice>
+  <choice hidden="false" blue="false">
+      <text>>&lt;&gt;</text>
+      <event>
+          <weapon name="FISH_FOOD_1" />
+          <text>You take your prize.</text>
+      </event>
+  </choice>
+  <choice hidden="false" blue="false">
+      <text>>&lt;&gt;</text>
+      <event>
+          <weapon name="FISH_FOOD_2" />
+          <text>You take your prize.</text>
+      </event>
+  </choice>
+  <choice hidden="false" blue="false">
+      <text>>&lt;&gt;</text>
+      <event>
+          <weapon name="FISH_FOOD_3" />
+          <text>You take your prize.</text>
+      </event>
+  </choice>
+  <choice hidden="false" blue="false">
+      <text>>&lt;&gt;</text>
+      <event>
+          <weapon name="FISH_FOOD_4" />
+          <text>You take your prize.</text>
+      </event>
+  </choice>
+  <choice hidden="false" blue="false">
+      <text>>&lt;&gt;</text>
+      <event>
+          <weapon name="FISH_FOOD_5" />
+          <text>You take your prize.</text>
+      </event>
+  </choice>
+  <choice hidden="false" blue="false">
+      <text>>&lt;&gt;</text>
+      <event>
+          <weapon name="FISH_FOOD_6" />
+          <text>You take your prize.</text>
+      </event>
+  </choice>
+  <choice hidden="false" blue="false">
+      <text>>&lt;&gt;</text>
+      <event>
+          <weapon name="FISH_FOOD_7" />
+          <text>You take your prize.</text>
+      </event>
+  </choice>
+  <choice hidden="false" blue="false">
+      <text>>&lt;&gt;</text>
+      <event>
+          <weapon name="FISH_FOOD_8" />
+          <text>You take your prize.</text>
+      </event>
+  </choice>
+  <choice hidden="false" blue="false">
+      <text>>&lt;&gt;</text>
+      <event>
+          <weapon name="FISH_FOOD_9" />
+          <text>You take your prize.</text>
+      </event>
+  </choice>
+  <choice hidden="false" blue="false">
+      <text>>('></text>
+      <event>
+          <weapon name="FISH_FOOD_10" />
+          <text>You take your prize.</text>
+      </event>
+  </choice>
+  <choice hidden="false" blue="false">
+      <text>>('></text>
+      <event>
+          <weapon name="FISH_FOOD_11" />
+          <text>You take your prize.</text>
+      </event>
+  </choice>
+  <choice hidden="false" blue="false">
+      <text>>('></text>
+      <event>
+          <weapon name="FISH_FOOD_12" />
+          <text>You take your prize.</text>
+      </event>
+  </choice>
+  <choice hidden="false" blue="false">
+      <text>>('></text>
+      <event>
+          <weapon name="FISH_FOOD_13" />
+          <text>You take your prize.</text>
+      </event>
+  </choice>
+  <choice hidden="false" blue="false">
+      <text>>('></text>
+      <event>
+          <weapon name="FISH_FOOD_14" />
+          <text>You take your prize.</text>
+      </event>
+  </choice>
+  <choice hidden="false" blue="false">
+      <text>>('></text>
+      <event>
+          <weapon name="FISH_FOOD_15" />
+          <text>You take your prize.</text>
+      </event>
+  </choice>
+  <choice hidden="false" blue="false">
+      <text>>('></text>
+      <event>
+          <weapon name="FISH_FOOD_16" />
+          <text>You take your prize.</text>
+      </event>
+  </choice>
+  <choice hidden="false" blue="false">
+      <text>>('></text>
+      <event>
+          <weapon name="FISH_FOOD_17" />
+          <text>You take your prize.</text>
+      </event>
+  </choice>
+  <choice hidden="false" blue="false">
+      <text>>('></text>
+      <event>
+          <weapon name="FISH_FOOD_18" />
+          <text>You take your prize.</text>
+      </event>
+  </choice>
+  <choice hidden="false" blue="false">
+      <text>>('></text>
+      <event>
+          <weapon name="FISH_FOOD_19" />
+          <text>You take your prize.</text>
+      </event>
+  </choice>
+  <choice hidden="false" blue="false">
+      <text>>&lt;(((*></text>
+      <event>
+          <weapon name="FISH_FOOD_20" />
+          <text>You take your prize.</text>
+      </event>
+  </choice>
+  <choice hidden="false" blue="false">
+      <text>>&lt;(((*></text>
+      <event>
+          <weapon name="FISH_FOOD_21" />
+          <text>You take your prize.</text>
+      </event>
+  </choice>
+  <choice hidden="false" blue="false">
+      <text>>&lt;(((*></text>
+      <event>
+          <weapon name="FISH_FOOD_22" />
+          <text>You take your prize.</text>
+      </event>
+  </choice>
+  <choice hidden="false" blue="false">
+      <text>>&lt;(((*></text>
+      <event>
+          <weapon name="FISH_FOOD_23" />
+          <text>You take your prize.</text>
+      </event>
+  </choice>
+  <choice hidden="false" blue="false">
+      <text>>&lt;(((*></text>
+      <event>
+          <weapon name="FISH_FOOD_24" />
+          <text>You take your prize.</text>
+      </event>
+  </choice>
+  <choice hidden="false" blue="false">
+      <text>>&lt;(((*></text>
+      <event>
+          <weapon name="FISH_FOOD_25" />
+          <text>You take your prize.</text>
+      </event>
+  </choice>
+  <choice hidden="false" blue="false">
+      <text>>&lt;(((*></text>
+      <event>
+          <weapon name="FISH_FOOD_26" />
+          <text>You take your prize.</text>
+      </event>
+  </choice>
+  <choice hidden="false" blue="false">
+      <text>>&lt;(((*></text>
+      <event>
+          <weapon name="FISH_FOOD_27" />
+          <text>You take your prize.</text>
+      </event>
+  </choice>
+  <choice hidden="false" blue="false">
+      <text>>&lt;(((*></text>
+      <event>
+          <weapon name="FISH_FOOD_28" />
+          <text>You take your prize.</text>
+      </event>
+  </choice>
+  <choice hidden="false" blue="false">
+      <text>>&lt;(((*></text>
+      <event>
+          <weapon name="FISH_FOOD_29" />
+          <text>You take your prize.</text>
+      </event>
+  </choice>
+
+  <choice hidden="false" blue="false">
+      <text>>&lt;(((*></text>
+      <event>
+          <weapon name="FISH_FOOD_LASER" />
+          <text>You take your prize.</text>
+      </event>
+  </choice>
+  <choice hidden="false" blue="false">
+      <text>>&lt;(((*></text>
+      <event>
+          <weapon name="FISH_FOOD_ION" />
+          <text>You take your prize.</text>
+      </event>
+  </choice>
+  <choice hidden="false" blue="false">
+      <text>>&lt;(((*></text>
+      <event>
+          <weapon name="FISH_FOOD_FLAK" />
+          <text>You take your prize.</text>
+      </event>
+  </choice>
+  <choice hidden="false" blue="false">
+      <text>>&lt;(((*></text>
+      <event>
+          <weapon name="FISH_FOOD_BEAM" />
+          <text>You take your prize.</text>
+      </event>
+  </choice>
+  <choice hidden="false" blue="false">
+      <text>>&lt;(((*></text>
+      <event>
+          <weapon name="FISH_FOOD_MINELAYER" />
+          <text>You take your prize.</text>
+      </event>
+  </choice>
+  <choice hidden="false" blue="false">
+      <text>>&lt;(((*></text>
+      <event>
+          <weapon name="FISH_FOOD_MISSILE_1" />
+          <text>You take your prize.</text>
+      </event>
+  </choice>
+  <choice hidden="false" blue="false">
+      <text>>&lt;(((*></text>
+      <event>
+          <weapon name="FISH_FOOD_MISSILE_2" />
+          <text>You take your prize.</text>
+      </event>
+  </choice>
+
+  <choice hidden="false" blue="false">
+      <text>>&lt;&gt;(((*></text>
+      <event>
+          <weapon name="FISH_FOOD_31" />
+          <text>You take your prize.</text>
+      </event>
+  </choice>
+  <choice hidden="false" blue="false">
+      <text>>&lt;&gt;(((*></text>
+      <event>
+          <weapon name="FISH_FOOD_32" />
+          <text>You take your prize.</text>
+      </event>
+  </choice>
+  <choice hidden="false" blue="false">
+      <text>>&lt;&gt;(((*></text>
+      <event>
+          <weapon name="FISH_FOOD_33" />
+          <text>You take your prize.</text>
+      </event>
+  </choice>
+  <choice hidden="false" blue="false">
+      <text>>&lt;&gt;(((*></text>
+      <event>
+          <weapon name="FISH_FOOD_34" />
+          <text>You take your prize.</text>
+      </event>
+  </choice>
+  <choice hidden="false" blue="false">
+      <text>>&lt;&gt;(((*></text>
+      <event>
+          <weapon name="FISH_FOOD_35" />
+          <text>You take your prize.</text>
+      </event>
+  </choice>
+  <choice hidden="false" blue="false">
+      <text>>&lt;&gt;(((*></text>
+      <event>
+          <weapon name="FISH_FOOD_36" />
+          <text>You take your prize.</text>
+      </event>
+  </choice>
+  <choice hidden="false" blue="false">
+      <text>>&lt;&gt;(((*></text>
+      <event>
+          <weapon name="FISH_FOOD_37" />
+          <text>You take your prize.</text>
+      </event>
+  </choice>
+
+  <choice hidden="false" blue="false" req="fish_obtained_41" lvl="1">
+      <text>>&lt;&gt;(((*></text>
+      <event>
+          <weapon name="FISH_FOOD_41" />
+          <text>You take your prize.</text>
+      </event>
+  </choice>
+  <choice hidden="false" blue="false" req="fish_obtained_42" lvl="1">
+      <text>>&lt;&gt;(((*></text>
+      <event>
+          <weapon name="FISH_FOOD_42" />
+          <text>You take your prize.</text>
+      </event>
+  </choice>
+  <choice hidden="false" blue="false" req="fish_obtained_43" lvl="1">
+      <text>>&lt;&gt;(((*></text>
+      <event>
+          <weapon name="FISH_FOOD_43" />
+          <text>You take your prize.</text>
+      </event>
+  </choice>
+  <choice hidden="false" blue="false" req="fish_obtained_44" lvl="1">
+      <text>>&lt;&gt;(((*></text>
+      <event>
+          <weapon name="FISH_FOOD_44" />
+          <text>You take your prize.</text>
+      </event>
+  </choice>
+  <choice hidden="false" blue="false" req="fish_obtained_45" lvl="1">
+      <text>>&lt;&gt;(((*></text>
+      <event>
+          <weapon name="FISH_FOOD_45" />
+          <text>You take your prize.</text>
+      </event>
+  </choice>
+  <choice hidden="false" blue="false" req="fish_obtained_46" lvl="1">
+      <text>>&lt;&gt;(((*></text>
+      <event>
+          <weapon name="FISH_FOOD_46" />
+          <text>You take your prize.</text>
+      </event>
+  </choice>
+  <choice hidden="false" blue="false" req="fish_obtained_47" lvl="1">
+      <text>>&lt;&gt;(((*></text>
+      <event>
+          <weapon name="FISH_FOOD_47" />
+          <text>You take your prize.</text>
+      </event>
+  </choice>
+  <choice hidden="false" blue="false" req="fish_obtained_48" lvl="1">
+      <text>>&lt;&gt;(((*></text>
+      <event>
+          <weapon name="FISH_FOOD_48" />
+          <text>You take your prize.</text>
+      </event>
+  </choice>
+  <choice hidden="false" blue="false" req="fish_obtained_49" lvl="1">
+      <text>>&lt;&gt;(((*></text>
+      <event>
+          <weapon name="FISH_FOOD_49" />
+          <text>You take your prize.</text>
+      </event>
+  </choice>
+  <choice hidden="false" blue="false" req="fish_obtained_40" lvl="1">
+      <text>>&lt;&gt;(((*></text>
+      <event>
+          <weapon name="FISH_FOOD_40" />
+          <text>You take your prize.</text>
+      </event>
+  </choice>
+  <choice hidden="false" blue="false" req="fish_obtained_4A" lvl="1">
+      <text>>&lt;&gt;(((*></text>
+      <event>
+          <weapon name="FISH_FOOD_4A" />
+          <text>You take your prize.</text>
+      </event>
+  </choice>
+  <choice hidden="false" blue="false" req="fish_obtained_4B" lvl="1">
+      <text>>&lt;&gt;(((*></text>
+      <event>
+          <weapon name="FISH_FOOD_4B" />
+          <text>You take your prize.</text>
+      </event>
+  </choice>
+  <choice hidden="false" blue="false" req="fish_obtained_4C" lvl="1">
+      <text>>&lt;&gt;(((*></text>
+      <event>
+          <weapon name="FISH_FOOD_4C" />
+          <text>You take your prize.</text>
+      </event>
+  </choice>
+  <choice hidden="false" blue="false" req="fish_obtained_4D" lvl="1">
+      <text>>&lt;&gt;(((*></text>
+      <event>
+          <weapon name="FISH_FOOD_4D" />
+          <text>You take your prize.</text>
+      </event>
+  </choice>
+  <choice hidden="false" blue="false" req="fish_obtained_4E" lvl="1">
+      <text>>&lt;&gt;(((*></text>
+      <event>
+          <weapon name="FISH_FOOD_4E" />
+          <text>You take your prize.</text>
+      </event>
+  </choice>
+
+  
+  <choice hidden="false" blue="true" req="fish_obtained_maw" lvl="1">
+      <text>(&gt;&gt;:~:&lt;&lt;)</text>
+      <event>
+          <weapon name="FISH_MAW_1_000" />
+          <text>You take your /p`r_iz|*e~.</text>
+      </event>
+  </choice>
+  
 </event>
 
 <mod:findName type="event" name="START_BEACON_PREP_OPTIONS">
-		<mod-append:choice hidden="true" req="FISH_WEIGHT_RECORD_TOTAL" lvl="100" blue="false">
+		<mod-append:choice hidden="true" req="ACH_FISH_MILESTONE_1" lvl="16000" blue="false">
         <text>Visit the fish locker.</text>
         <event>
             <text>Grab a fish from the collection of previous renegades.</text>
-            <choice hidden="false" blue="false" req="FISH_WEIGHT_RECORD_TOTAL" lvl="100">
-                <text>[Rookie] Get a normal fish.</text>
+            <choice hidden="true" blue="false" req="FISH_WEIGHT_RECORD_TOTAL" lvl="16000" max_lvl="48000">
+                <text>[Rookie] Get a fish.</text>
                 <event>
                     <weapon name="FISHLIST_1" />
                     <text>You present your fishing credentials to the crustodeans.  "Alright slugger, one fish coming up!"</text>
-                    <choice hidden="false" blue="false">
-                        <text>Continue...</text>
-                    </choice>
                 </event>
             </choice>
-            <choice hidden="false" blue="false" req="FISH_WEIGHT_RECORD_TOTAL" lvl="2000">
+            <choice hidden="false" blue="false" req="FISH_WEIGHT_RECORD_TOTAL" lvl="48000">
+                <text>[Rookie] Get a fish.</text>
+                <event>
+                    <weapon name="FISHLIST_1" />
+                    <text>You present your fishing credentials to the crustodeans.  "Alright slugger, one fish coming up!"</text>
+                </event>
+            </choice>
+            <choice hidden="true" blue="false" req="FISH_WEIGHT_RECORD_TOTAL" lvl="32000" max_lvl="128000">
                 <text>[Challenger] Get a big fish.</text>
                 <event>
                     <weapon name="FISHLIST_2" />
                     <text>You present your fishing credentials to the crustodeans.  "You got it boss, here's your fish!"</text>
-                    <choice hidden="false" blue="false">
-                        <text>Continue...</text>
-                    </choice>
                 </event>
             </choice>
-            <choice hidden="false" blue="false" req="FISH_WEIGHT_RECORD_TOTAL" lvl="5000">
+            <choice hidden="false" blue="false" req="FISH_WEIGHT_RECORD_TOTAL" lvl="128000">
+                <text>[Challenger] Get a big fish.</text>
+                <event>
+                    <weapon name="FISHLIST_2" />
+                    <text>You present your fishing credentials to the crustodeans.  "You got it boss, here's your fish!"</text>
+                </event>
+            </choice>
+            <choice hidden="true" blue="false" req="FISH_WEIGHT_RECORD_TOTAL" lvl="80000" max_lvl="240000">
                 <text>[Master] Get a huge fish.</text>
                 <event>
                     <weapon name="FISHLIST_3" />
                     <text>You present your fishing credentials to the crustodeans.  "Whoa, alright!  Hey fellas, pull out the big ones!"</text>
-                    <choice hidden="false" blue="false">
-                        <text>Continue...</text>
-                    </choice>
                 </event>
             </choice>
-            <choice hidden="false" blue="false" req="FISH_WEIGHT_RECORD_TOTAL" lvl="10000">
+            <choice hidden="false" blue="false" req="FISH_WEIGHT_RECORD_TOTAL" lvl="240000">
+                <text>[Master] Get a huge fish.</text>
+                <event>
+                    <weapon name="FISHLIST_3" />
+                    <text>You present your fishing credentials to the crustodeans.  "Whoa, alright!  Hey fellas, pull out the big ones!"</text>
+                </event>
+            </choice>
+            <choice hidden="true" blue="false" req="FISH_WEIGHT_RECORD_TOTAL" lvl="160000" max_lvl="960000">
                 <text>[Grand Master] Get a legendary fish.</text>
                 <event>
                     <weapon name="FISHLIST_LEG" />
                     <text>You present your fishing credentials to the crustodeans.  "Well now that's not something you see every day." He nods. "Your items will be beamed abord presently."</text>
-                    <choice hidden="false" blue="false">
-                        <text>Continue...</text>
-                    </choice>
                 </event>
             </choice>
-            <choice hidden="false" blue="false" req="FISH_WEIGHT_RECORD_TOTAL" lvl="500">
+            <choice hidden="false" blue="false" req="FISH_WEIGHT_RECORD_TOTAL" lvl="960000">
+                <text>[Grand Master] Get a legendary fish.</text>
+                <event>
+                    <weapon name="FISHLIST_LEG" />
+                    <text>You present your fishing credentials to the crustodeans.  "Well now that's not something you see every day." He nods. "Your items will be beamed abord presently."</text>
+                </event>
+            </choice>
+            <choice hidden="true" blue="false" req="FISH_WEIGHT_RECORD_TOTAL" lvl="24000" max_lvl="120000">
                 <text>[Professional] Get a fish gun.</text>
                 <event>
                     <weapon name="FISHLIST_GUNS" />
                     <text>You present your fishing credentials to the crustodeans.  Eyes glinting, they hand you a gunfish. "I see you're a renegade of fine taste! You gotta tell me how it does for you after you take it for a spin."</text>
-                    <choice hidden="false" blue="false">
-                        <text>Continue...</text>
-                    </choice>
                 </event>
             </choice>
-            <choice hidden="false" blue="false" req="FISH_WEIGHT_RECORD_TOTAL" lvl="100000">
-                <text>[Fish Lord] Take your pick of everything. todo add this</text>
+            <choice hidden="false" blue="false" req="FISH_WEIGHT_RECORD_TOTAL" lvl="120000">
+                <text>[Professional] Get a fish gun.</text>
                 <event>
-                    <text>You stride into the Hall of Fish, clearing the security checkpoint with a flash of your cod-tier fishing creds. Rows upon rows of fish unfold before you. Never before nor since has such a collection been at one captain's disposal.  You muse over your options...</text>
-                    <choice hidden="false" blue="false">
+                    <weapon name="FISHLIST_GUNS" />
+                    <text>You present your fishing credentials to the crustodeans.  Eyes glinting, they hand you a gunfish. "I see you're a renegade of fine taste! You gotta tell me how it does for you after you take it for a spin."</text>
+                </event>
+            </choice>
+            <choice hidden="false" blue="false" req="FISH_WEIGHT_RECORD_TOTAL" lvl="1600000">
+                <text>[Fish Lord] Take your pick of everything.</text>
+                <event>
+                    <text>You stride into the Hall of Fish, clearing the security checkpoint with a flash of your cod-tier fishing creds.</text>
+                    <choice hidden="true" blue="false">
                         <text>Continue...</text>
-                        <event load="FISH_ULTRA_RARE" />
+                        <loadEvent>FISH_CHOOSE_ANY</loadEvent>
                     </choice>
                 </event>
             </choice>
