@@ -194,7 +194,7 @@
 <victory volume="9">bass_fishing/actually_music/CreditsCropped.ogg</victory>
 
 <!-- Unused -->
-<BASS_rename volume="4">bass_fishing/rename.ogg</BASS_rename>
+<BASS_rename volume="4">bass_fishing/ready.ogg</BASS_rename>
 <BASS_times_up volume="4">bass_fishing/times_up.ogg</BASS_times_up>
 <BASS_cape_area volume="4">bass_fishing/cape_area.ogg</BASS_cape_area>
 <BASS_cast_aim_for_the_big_one volume="4">bass_fishing/cast_aim_for_the_big_one.ogg</BASS_cast_aim_for_the_big_one>

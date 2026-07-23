@@ -195,6 +195,9 @@ local function drawFishingReadout(string, weight, x, y)
     Graphics.CSurface.GL_DrawCircle(x, y + radius, radius, FISH_BLUE)
     Graphics.CSurface.GL_DrawCircle(x + WEIGHT_BOX_WIDTH, y + radius, radius, FISH_BLUE)
     Graphics.freetype.easy_print(50, x - 2, y + 3, string)
+    if Hyperspace.playerVariables and Hyperspace.playerVariables.newRecord == 1 then
+        Graphics.CSurface.GL_SetColor(YELLOW)
+    end
     Graphics.freetype.easy_print(50, x + radius, y + WEIGHT_BOX_HEIGHT + 3,
         formatFishWeightString(weight))
     Graphics.CSurface.GL_PopMatrix()
@@ -226,7 +229,13 @@ script.on_internal_event(Defines.InternalEvents.ON_TICK, function()
     if mTickingDownWeight and mCaughtFishRemainingWeight > 0 then
         mCaughtFishRemainingWeight = mCaughtFishRemainingWeight - 1
         Hyperspace.playerVariables.totalFishWeightOz = Hyperspace.playerVariables.totalFishWeightOz + 1
-        Hyperspace.metaVariables[shipSizeRecordKey(Hyperspace.ships(0))] = math.max(Hyperspace.playerVariables.totalFishWeightOz, Hyperspace.metaVariables[shipSizeRecordKey(Hyperspace.ships(0))])
+        if Hyperspace.playerVariables.totalFishWeightOz > Hyperspace.metaVariables[shipSizeRecordKey(Hyperspace.ships(0))] then
+            Hyperspace.metaVariables[shipSizeRecordKey(Hyperspace.ships(0))] = Hyperspace.playerVariables.totalFishWeightOz
+            if Hyperspace.playerVariables.newRecord == 0 then
+                mSoundManager:queueSound(MAIN_CHANNEL, "BASS_rank_in", 5, false, 1.1)
+                Hyperspace.playerVariables.newRecord = 1
+            end
+        end
     end
 end)
 
@@ -267,43 +276,31 @@ local function queueSizeTickdown(locationEvent, inflationFactor)
     end
 end
 
-local function ignoreNextEvent()
-    -- if Hyperspace.metaVariables.fish_ignore_next_catch == 1 then
-    --     Hyperspace.metaVariables.fish_ignore_next_catch = 0
-    --     return true
-    -- end
-end
-
 local function bassTS0(locationEvent)
-    if ignoreNextEvent() then return end
     mSoundManager:playSound(MAIN_CHANNEL, "BASS_get_small", 4, false, bst.junk)
     mSoundManager:queueSound(MAIN_CHANNEL, getRandomItem(JUNK_CATCH_SOUNDS), 6, false, 0)
     queueSizeTickdown(locationEvent, 1)
 end
 
 local function bassTS1(locationEvent)
-    if ignoreNextEvent() then return end
     mSoundManager:playSound(MAIN_CHANNEL, "BASS_get_average", 4, false, bst.average)
     mSoundManager:queueSound(MAIN_CHANNEL, getRandomItem(AVERAGE_CATCH_SOUNDS), 6, false, 0)
     queueSizeTickdown(locationEvent, 1.9)
 end
 
 local function bassTS2(locationEvent)
-    if ignoreNextEvent() then return end
     mSoundManager:playSound(MAIN_CHANNEL, "BASS_get_big", 5, false, bst.big)
     mSoundManager:queueSound(MAIN_CHANNEL, getRandomItem(BIG_CATCH_SOUNDS), 6, false, 0)
     queueSizeTickdown(locationEvent, 1.8)
 end
 
 local function bassTS3(locationEvent)
-    if ignoreNextEvent() then return end
     mSoundManager:playSound(MAIN_CHANNEL, "BASS_get_huge", 6, false, bst.huge)
     mSoundManager:queueSound(MAIN_CHANNEL, getRandomItem(HUGE_CATCH_SOUNDS), 6, false, 0)
     queueSizeTickdown(locationEvent, 1.8)
 end
 
 local function bassTS4(locationEvent)
-    if ignoreNextEvent() then return end
     mSoundManager:playSound(MAIN_CHANNEL, "BASS_get_legend", 6, false, bst.legend)
     mSoundManager:queueSound(MAIN_CHANNEL, getRandomItem(LEGEND_CATCH_SOUNDS), 6, false, 0)
     queueSizeTickdown(locationEvent, 1.6)
