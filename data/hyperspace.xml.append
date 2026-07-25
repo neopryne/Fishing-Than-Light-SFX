@@ -11,6 +11,7 @@
     <mod-append:script>data/scripts/fish/sound_manager.lua</mod-append:script>
     <mod-append:script>data/scripts/fish/fish_listener.lua</mod-append:script>
     <mod-append:script>data/scripts/fish/fishing.lua</mod-append:script>
+    <mod-append:script>data/scripts/fish/fishing_show_blueprints.lua</mod-append:script>
     <mod-append:script>data/scripts/fish/ship_ach.lua</mod-append:script>
 </mod:findLike>
 

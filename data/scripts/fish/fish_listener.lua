@@ -93,6 +93,7 @@ local mLegendHooked = false --meaningful banter
 local mSoundManager = SoundManager.new()
 local mSecondSound
 local mCaughtFishRemainingWeight = 0
+local mPendingTransferWeight = 0
 --When game loads:
 local loadSoundsType = math.ceil(math.random() + .04)
 script.on_init(function(newGame)
@@ -227,8 +228,13 @@ end)
 local mTickingDownWeight = false
 script.on_internal_event(Defines.InternalEvents.ON_TICK, function()
     if mTickingDownWeight and mCaughtFishRemainingWeight > 0 then
-        mCaughtFishRemainingWeight = mCaughtFishRemainingWeight - 1
-        Hyperspace.playerVariables.totalFishWeightOz = Hyperspace.playerVariables.totalFishWeightOz + 1
+        local transferAmount = 59.97 * time_increment(false) --calibrated from ~60fps
+        mCaughtFishRemainingWeight = mCaughtFishRemainingWeight - transferAmount
+        mPendingTransferWeight = mPendingTransferWeight + transferAmount
+        if mPendingTransferWeight >= 1 then --HS vars can only be integers.
+            Hyperspace.playerVariables.totalFishWeightOz = Hyperspace.playerVariables.totalFishWeightOz + 1
+            mPendingTransferWeight = mPendingTransferWeight - 1
+        end
         if Hyperspace.playerVariables.totalFishWeightOz > Hyperspace.metaVariables[shipSizeRecordKey(Hyperspace.ships(0))] then
             Hyperspace.metaVariables[shipSizeRecordKey(Hyperspace.ships(0))] = Hyperspace.playerVariables.totalFishWeightOz
             if Hyperspace.playerVariables.newRecord == 0 then
