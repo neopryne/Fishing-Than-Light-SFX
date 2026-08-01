@@ -5,16 +5,11 @@
 <version>^1.11.0</version>
 
 <mod:findLike type="scripts" limit="1">
-    <mod-append:script>data/scripts/fish/init.lua</mod-append:script>
-    <mod-append:script>data/scripts/fish/deque.lua</mod-append:script>
-    <mod-append:script>data/scripts/fish/ship_to_info.lua</mod-append:script>
-    <mod-append:script>data/scripts/fish/sound_manager.lua</mod-append:script>
     <mod-append:script>data/scripts/fish/fish_listener.lua</mod-append:script>
     <mod-append:script>data/scripts/fish/fishing.lua</mod-append:script>
     <mod-append:script>data/scripts/fish/fishing_show_blueprints.lua</mod-append:script>
     <mod-append:script>data/scripts/fish/ship_ach.lua</mod-append:script>
 </mod:findLike>
-
 
 <mod:findLike type="events" limit="1">
     <mod:findName type="req" name="LIST_CHECK_AUGMENTS">
@@ -1843,108 +1838,6 @@
                 <header>Fish Caught!</header>
                 <icon>fishMISSILE_2</icon>
                 <variable name="fish_obtained_MISSILE_2" amount="1" />
-				<multiDifficulty>false</multiDifficulty>
-            </achievement>
-        </section>
-
-        <section text="Fishing Milestones" hidden="false">
-            <achievement name="ACH_FISH_MILESTONE_1">
-				<name>Fishing Rookie</name>
-				<secretDescription>Get 1,000 pounds of fish!</secretDescription>
-				<description>Reach 1,000 lbs. of total catch weight across all ships.  Next milestone at 1,500 lbs.
-				You can now select getting a fish for your prep option.</description>
-				<header>Milestone Get!</header>
-				<icon>bass_3</icon>
-				<multiDifficulty>false</multiDifficulty>
-            </achievement>
-            <achievement name="ACH_FISH_MILESTONE_GUN">
-				<name>Fishing Professional</name>
-				<secretDescription>Get 1,500 pounds of fish!</secretDescription>
-				<description>Reach 1,500 lbs. of total catch weight across all ships.  Next milestone at 2,000 lbs.
-				You can now select getting a fishgun for your prep option.</description>
-				<header>Milestone Get!</header>
-				<icon>bass_12</icon>
-				<multiDifficulty>false</multiDifficulty>
-            </achievement>
-            <achievement name="ACH_FISH_MILESTONE_2">
-				<name>Fishing Master</name>
-				<secretDescription>Get 2,000 pounds of fish!</secretDescription>
-				<description>Reach 2,000 lbs. of total catch weight across all ships.  Next milestone at 3,000 lbs.
-				You can now select a big fish for your prep option.</description>
-				<header>Milestone Get!</header>
-				<icon>bass_5</icon>
-				<multiDifficulty>false</multiDifficulty>
-            </achievement>
-            <achievement name="ACH_FISH_MILESTONE_1_1">
-				<name>Visionary Rookie</name>
-				<secretDescription>Get 3,000 pounds of fish!</secretDescription>
-				<description>Reach 3,000 lbs. of total catch weight across all ships.  Next milestone at 5,000 lbs.
-				You can now see the first fish in your prep options.</description>
-				<header>Milestone Get!</header>
-				<icon>bass_6</icon>
-				<multiDifficulty>false</multiDifficulty>
-            </achievement>
-            <achievement name="ACH_FISH_MILESTONE_3">
-				<name>Fishing Grand Master</name>
-				<secretDescription>Get 5,000 pounds of fish!</secretDescription>
-				<description>Reach 5,000 lbs. of total catch weight across all ships.  Next milestone at 7,500 lbs.
-				You can now select a huge fish for your prep option.</description>
-				<header>Milestone Get!</header>
-				<icon>bass_7</icon>
-				<multiDifficulty>false</multiDifficulty>
-            </achievement>
-            <achievement name="ACH_FISH_MILESTONE_GUN_1">
-				<name>Visionary Professional</name>
-				<secretDescription>Get 7,500 pounds of fish!</secretDescription>
-				<description>Reach 7,500 lbs. of total catch weight across all ships.  Next milestone at 8,000 lbs.
-				You can now see the fishgun in your prep options.</description>
-				<header>Milestone Get!</header>
-				<icon>bass_1</icon>
-				<multiDifficulty>false</multiDifficulty>
-            </achievement>
-            <achievement name="ACH_FISH_MILESTONE_2_1">
-				<name>Visionary Master</name>
-				<secretDescription>Get 8,000 pounds of fish!</secretDescription>
-				<description>Reach 8,000 lbs. of total catch weight across all ships.  Next milestone at 10,000 lbs.
-				You can now see the big fish in your prep options.</description>
-				<header>Milestone Get!</header>
-				<icon>bass_9</icon>
-				<multiDifficulty>false</multiDifficulty>
-            </achievement>
-            <achievement name="ACH_FISH_MILESTONE_4">
-				<name>Fishing Legend</name>
-				<secretDescription>Get 10,000 pounds of fish!</secretDescription>
-				<description>Reach 10,000 lbs. of total catch weight across all ships.  Next milestone at 15,000 lbs.
-				You can now select a legendary fish for your prep option.</description>
-				<header>Milestone Get!</header>
-				<icon>bass_8</icon>
-				<multiDifficulty>false</multiDifficulty>
-            </achievement>
-            <achievement name="ACH_FISH_MILESTONE_3_1">
-				<name>Visionary Grand Master</name>
-				<secretDescription>Get 15,000 pounds of fish!</secretDescription>
-				<description>Reach 15,000 lbs. of total catch weight across all ships.  Next milestone at 60,000 lbs.
-				You can now see the huge fish in your prep options.</description>
-				<header>Milestone Get!</header>
-				<icon>bass_10</icon>
-				<multiDifficulty>false</multiDifficulty>
-            </achievement>
-            <achievement name="ACH_FISH_MILESTONE_4_1">
-				<name>Visionary Legend</name>
-				<secretDescription>Get 60,000 pounds of fish!</secretDescription>
-				<description>Reach 60,000 lbs. of total catch weight across all ships.  Next milestone at 100,000 lbs.
-				You can now see the huge fish in your prep options.</description>
-				<header>Milestone Get!</header>
-				<icon>bass_11</icon>
-				<multiDifficulty>false</multiDifficulty>
-            </achievement>
-            <achievement name="ACH_FISH_MILESTONE_5">
-				<name>Lord of Fishing</name>
-				<secretDescription>Get 100,000 pounds of fish!</secretDescription>
-				<description>Reach 100,000 lbs. of total catch weight across all ships.  You're the big kahuna.
-				You can now select any fish in your prep options.</description>
-				<header>Milestones Complete!</header>
-				<icon>bass_4</icon>
 				<multiDifficulty>false</multiDifficulty>
             </achievement>
         </section>

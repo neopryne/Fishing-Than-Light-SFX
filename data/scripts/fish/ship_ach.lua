@@ -1,4 +1,4 @@
-local fishListener = mods.fishing.fishListener
+local fishListener = mods.fishing.fishListener.internal
 
 ----------------------
 -- HELPER FUNCTIONS --
@@ -54,10 +54,10 @@ local function check_fish_ach(itemName)
             unlockTracker:UnlockShip("PLAYER_SHIP_FISHING_3", false)
         end
         local fishId = string.sub(itemName, 11, string.len(itemName))
-        --print(itemName)
-        --print("fish_obtained_"..tostring(fishId))
+        -- print(itemName)
+        -- print("fish_obtained_"..tostring(fishId))
         if (Hyperspace.metaVariables["fish_obtained_"..tostring(fishId)]) == 0 then
-            fishListener.recordSize()
+            fishListener.onFirstCatch(itemName)
         end
         Hyperspace.metaVariables["fish_obtained_"..tostring(fishId)] = 1
         return true

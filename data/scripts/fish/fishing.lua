@@ -1,5 +1,6 @@
 
 log("FISHIGN WORK")
+mods.fishing = {}
 --#region--------------
 -- UTILITY FUNCTIONS --
 -----------------------
@@ -122,13 +123,11 @@ local RandomList = {
     end,
 }
 --#endregion
-local fishListener = mods.fishing.fishListener
+local fishListener = mods.fishing.fishListener.internal
 
 -------------the good stuff
---Tiodo weight tick sounds,  TOTAL WEIGHT tracker, weight is ... cost of the fish reward?  * [.75-1.25?]
---Background is a rect and a circle of slightly grey sky blue.  This makes "record size" banter not make sense with unlocks.
---#region definitions
 
+--#region definitions
 local fishSounds = RandomList:New {"fishsplash1", "fishsplash2", "fishsplash3", "fishsplash4", "fishsplash5", "fishsplash6", "fishsplash7"}
 
 mods.fishing.rods = {}
@@ -199,6 +198,7 @@ local xOffset = 650
 local yOffset = 75
 
 local shipBlueprint = nil
+mods.fishing.FISH_MAX = fishMax
 
 local flagShipBlueprints = {}
 flagShipBlueprints["MU_MFK_FLAGSHIP_CASUAL"] = true
@@ -227,7 +227,6 @@ flagShipBlueprints["BOSS_3_NORMAL_DLC"] = true
 flagShipBlueprints["BOSS_1_HARD_DLC"] = true
 flagShipBlueprints["BOSS_2_HARD_DLC"] = true
 flagShipBlueprints["BOSS_3_HARD_DLC"] = true
---#endregion definitions
 
 local WHITE = Graphics.GL_Color(1, 1, 1, 1)
 local YELLOW = Graphics.GL_Color(1, 1, 0, 1)
@@ -239,6 +238,7 @@ local BLUE = Graphics.GL_Color(0, 0, 1, .5)
 local INDEGO = Graphics.GL_Color(.5, 0, 1, .5)
 local PURPLE = Graphics.GL_Color(1, 0, 1, .5)
 local BAR_COLORS = {{WHITE, YELLOW, ORANGE, O_RED, RED}, {WHITE, GREEN, BLUE, INDEGO, PURPLE}}
+--#endregion definitions
 
 local mCurrentDangerLevels = {1,1} --[0-4]
 local fishBeingCaught = false
@@ -258,11 +258,14 @@ local fishCatch2 = 46
 local fishNumber2 = 0
 local fishTimer2 = 2
 
+
+
+
 script.on_internal_event(Defines.InternalEvents.PROJECTILE_INITIALIZE, function(projectile, weaponBlueprint)
     local fishingData = rods[weaponBlueprint.name]
     if fishingData and Hyperspace.playerVariables.fish_this_jump == 0 then
         shipBlueprint = Hyperspace.ships.enemy.myBlueprint.blueprintName
-        --print(shipBlueprint)
+        -- print(shipBlueprint)
         Hyperspace.playerVariables.fish_this_jump = 1
         Hyperspace.playerVariables.fish_active = 1
         local shipManager = Hyperspace.ships.player
@@ -271,7 +274,7 @@ script.on_internal_event(Defines.InternalEvents.PROJECTILE_INITIALIZE, function(
         if hasRepel and fishingData >= 5 then
             fishMin = math.floor(fishingData * 0.41)
         end
-        --log(tostring(fishMin).."to"..tostring(maxRodStrength))
+        -- log(tostring(fishMin).."to PROJECTILE_INITIALIZE"..tostring(maxRodStrength))
         fishNumber = math.random(1,fishingData)
         if fishNumber < fishMin then fishNumber = fishNumber + fishMin end
         fishCatch = 92
@@ -315,7 +318,7 @@ script.on_internal_event(Defines.InternalEvents.PROJECTILE_FIRE, function(projec
         if hasRepel and fishingData >= 5 then
             fishMin = math.floor(fishingData * 0.41)
         end
-        --log(tostring(fishMin).."to"..tostring(maxRodStrength))
+        --log(tostring(fishMin).."to ARTILLERY_FISHING_ROD_1"..tostring(maxRodStrength))
         local fishCatchMax = 5
         if Hyperspace.playerVariables.fish_arty_this_jump == 0 then
             fishCatchMax = 16
@@ -366,7 +369,7 @@ script.on_internal_event(Defines.InternalEvents.PROJECTILE_FIRE, function(projec
         if hasRepel and fishingData >= 5 then
             fishMin = math.floor(fishingData * 0.41)
         end
-        --log(tostring(fishMin).."to"..tostring(maxRodStrength))
+        -- log(tostring(fishMin).."to ARTILLERY_FISHING_ROD_2"..tostring(maxRodStrength))
         local fishCatchMax = 5
         if Hyperspace.playerVariables.fish_arty_this_jump == 0 then
             fishCatchMax = 16
@@ -436,7 +439,7 @@ local function fish_start_event()
     Hyperspace.playerVariables.fish_this_jump = 1
     Hyperspace.playerVariables.fish_active = 1
     Hyperspace.playerVariables.fish_again = Hyperspace.playerVariables.fish_again + 1
-    --log(tostring(fishMin).."to"..tostring(maxRodStrength))
+    -- log(tostring(fishMin).."to fishstartevent"..tostring(maxRodStrength))
     fishNumber = math.random(1,maxRodStrength)
     if fishNumber < fishMin then fishNumber = fishNumber + fishMin end
     fishCatch = 92
@@ -654,7 +657,6 @@ script.on_internal_event(Defines.InternalEvents.ON_TICK, function()
                 isFishing = true
                 local beepingLevel = math.ceil((-(((fishCatch / fishMax) - .4) * 10))) --allow it to be negative
                 -- print("beeping", beepingLevel)
-                fishListener.beepingLevel(1, beepingLevel)
                 mCurrentDangerLevels[1] = math.min(4, math.max(0, beepingLevel))
 
                 if fishSpeed > 0 then
@@ -667,7 +669,7 @@ script.on_internal_event(Defines.InternalEvents.ON_TICK, function()
                 if fishTimer == 0 then
                     local soundName = fishSounds:GetItem()
                     Hyperspace.Sounds:PlaySoundMix(soundName, -1, false)
-                    fishListener.fishDarts()
+                    fishListener.onFishDarts()
                     fishTimer = 1 - (fishNumber/17) + (2*math.random())
                     local negative = math.random()
                     local random = ((math.random() + 3) * (fishNumber * 2 + 20))
@@ -716,11 +718,11 @@ script.on_internal_event(Defines.InternalEvents.ON_TICK, function()
                         if flagShipBlueprints[shipBlueprint] then
                             Hyperspace.CustomAchievementTracker.instance:SetAchievement("FISHING_SHIP_ACH_3", false)
                         end
-                        local fishNumberRound = math.ceil(fishNumber/5) --1-3, but you might just get junk so I can't save the number until I know it.
+                        local fishNumberRound = math.ceil(fishNumber/5)
                         if fishNumber == 16 then
                             fishNumber = 0
                             Hyperspace.CustomEventsParser.GetInstance():LoadEvent(worldManager,"FISH_ULTRA_RARE",false,-1)
-                            fishListener.onCatch(1, fishNumberRound)
+                            fishListener.onCatch(1)
                         else
                             if shipManager:HasAugmentation("FISH_INAUG_BAIT") > 0 then
                                 maxRandom = 3
@@ -735,14 +737,13 @@ script.on_internal_event(Defines.InternalEvents.ON_TICK, function()
                             else
                                 --print("FISH1")
                                 Hyperspace.playerVariables.jumps_since_fish = 0
-                                fishListener.onCatch(1, fishNumberRound)
+                                fishListener.onCatch(1)
                                 Hyperspace.CustomEventsParser.GetInstance():LoadEvent(worldManager,sectors[Hyperspace.playerVariables.fish_sector]..fishNumberRound,false,-1)
                             end
                             fishNumber = 0
                         end
                     end
                 else
-                    fishListener.outOfBounds(selectPos - fishPos)
                     fishBeingCaught = false
                     local scalerLoss = 1
                     if shipManager:HasAugmentation("FISH_INAUG_SPEED") > 0 then
@@ -784,13 +785,12 @@ script.on_internal_event(Defines.InternalEvents.ON_TICK, function()
                 end
 
                 local beepingLevel = math.ceil(math.max(0, (-(((fishCatch2 / fishMax) - .4) * 10))))
-                --print("beeping2", beepingLevel)--todo remove
-                fishListener.beepingLevel(2, beepingLevel)
+                --print("beeping2", beepingLevel)
                 mCurrentDangerLevels[2] = math.min(4, math.max(0, beepingLevel))
 
                 fishTimer2 = math.max(fishTimer2 - Hyperspace.FPS.SpeedFactor/16, 0)
                 if fishTimer2 == 0 then
-                    fishListener.fishDarts()
+                    fishListener.onFishDarts()
                     local soundName = fishSounds:GetItem()
                     Hyperspace.Sounds:PlaySoundMix(soundName, -1, false)
                     fishTimer2 = 1 - (fishNumber2/17) + (2*math.random())
@@ -845,7 +845,7 @@ script.on_internal_event(Defines.InternalEvents.ON_TICK, function()
                         end
                         local fishNumberRound2 = math.ceil(fishNumber2/5)
                         if fishNumber2 == 16 then
-                            fishListener.onCatch(2, fishNumberRound2)
+                            fishListener.onCatch(2)
                             fishNumber2 = 0
                             Hyperspace.CustomEventsParser.GetInstance():LoadEvent(worldManager,"FISH_ULTRA_RARE",false,-1)
                         else
@@ -861,7 +861,7 @@ script.on_internal_event(Defines.InternalEvents.ON_TICK, function()
                             else
                                 --print("FISH2")
                                 Hyperspace.playerVariables.jumps_since_fish = 0
-                                fishListener.onCatch(2, fishNumberRound2)
+                                fishListener.onCatch(2)
                                 Hyperspace.CustomEventsParser.GetInstance():LoadEvent(worldManager,sectors[Hyperspace.playerVariables.fish_sector]..fishNumberRound2,false,-1)
                             end
                             fishNumber2 = 0
@@ -898,6 +898,7 @@ script.on_internal_event(Defines.InternalEvents.ON_TICK, function()
                     end
                 end
             end
+            fishListener.onFishTick(selectPos, {fishPos, fishPos2}, {fishCatch, fishCatch2})
         end
         --[[local musicTable = userdata_table(shipManager,"mods.fish.endMusic")
         if musicTable.time then

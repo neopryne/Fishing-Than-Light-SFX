@@ -1,6 +1,6 @@
 local vter = mods.multiverse.vter
 
---TODO these must be in the order they appear, the code doesn't match them.
+--these must be in the order they appear, the code doesn't match them.
 local BAIT_AUGMENTS = {"FISH_BAIT_DOUBLE", "FISH_BAIT_11", "FISH_BAIT_12",
          "FISH_BAIT_13", "FISH_BAIT_14", "FISH_BAIT_15", "FISH_BAIT_21",
          "FISH_BAIT_22", "FISH_BAIT_23", "FISH_BAIT_24", "FISH_BAIT_25",
@@ -84,9 +84,6 @@ local function configureBountyBlue(event)
         end
 	end
 end
-
---So the nice list is only in post_create, but I can't change option blue settings then.
---I can try to 
 
 script.on_internal_event(Defines.InternalEvents.PRE_CREATE_CHOICEBOX, function(event)
 	if event.eventName == "FISHING_BOUNTY_BOARD" then
